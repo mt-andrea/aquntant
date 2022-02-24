@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2022 at 07:01 PM
+-- Generation Time: Feb 24, 2022 at 07:22 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -171,7 +171,6 @@ ALTER TABLE `user`
 -- Constraints for table `movement`
 --
 ALTER TABLE `movement`
-  
   ADD CONSTRAINT `movement_ibfk_2` FOREIGN KEY (`typeid`) REFERENCES `type` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `movement_ibfk_3` FOREIGN KEY (`partnerid`) REFERENCES `partner` (`id`) ON UPDATE CASCADE;
 
