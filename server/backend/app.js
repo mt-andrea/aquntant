@@ -321,6 +321,6 @@ app.delete("/torol/penzmozgasok/:id", (req, res) => {
     })
 })
 
-app.listen(3000, () => {
-    console.log("Server elindítva a 3000-es porton...")
+app.listen(4000, () => {
+    console.log("Server elindítva a 4000-es porton...")
 });
