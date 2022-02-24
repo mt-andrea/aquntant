@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2022 at 06:19 PM
+-- Generation Time: Feb 24, 2022 at 07:01 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -32,7 +32,6 @@ CREATE TABLE `movement` (
   `date` date NOT NULL,
   `typeid` int(3) NOT NULL,
   `amount` int(7) NOT NULL,
-  `taxid` int(3) NOT NULL,
   `partnerid` int(4) NOT NULL,
   `comment` text COLLATE utf8mb4_hungarian_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
@@ -49,7 +48,8 @@ CREATE TABLE `partner` (
   `email` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `country` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `postal_code` varchar(6) COLLATE utf8mb4_hungarian_ci NOT NULL,
-  `address` varchar(50) COLLATE utf8mb4_hungarian_ci NOT NULL
+  `address` varchar(50) COLLATE utf8mb4_hungarian_ci NOT NULL,
+  `userid` int(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 -- --------------------------------------------------------
@@ -72,7 +72,20 @@ CREATE TABLE `tax` (
 
 CREATE TABLE `type` (
   `id` int(3) NOT NULL,
-  `name` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL
+  `name` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL,
+  `taxid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `id` int(5) NOT NULL,
+  `username` varchar(15) COLLATE utf8mb4_hungarian_ci NOT NULL,
+  `pass` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
@@ -84,16 +97,16 @@ CREATE TABLE `type` (
 --
 ALTER TABLE `movement`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `typeid` (`typeid`,`taxid`,`partnerid`),
-  ADD KEY `taxid` (`taxid`),
-  ADD KEY `partnerid` (`partnerid`);
+  ADD KEY `partnerid` (`partnerid`),
+  ADD KEY `typeid` (`typeid`);
 
 --
 -- Indexes for table `partner`
 --
 ALTER TABLE `partner`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `userid` (`userid`);
 
 --
 -- Indexes for table `tax`
@@ -107,7 +120,14 @@ ALTER TABLE `tax`
 --
 ALTER TABLE `type`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `name` (`name`);
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `taxid` (`taxid`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -138,6 +158,12 @@ ALTER TABLE `type`
   MODIFY `id` int(3) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -145,9 +171,21 @@ ALTER TABLE `type`
 -- Constraints for table `movement`
 --
 ALTER TABLE `movement`
-  ADD CONSTRAINT `movement_ibfk_1` FOREIGN KEY (`taxid`) REFERENCES `tax` (`id`) ON UPDATE CASCADE,
+  
   ADD CONSTRAINT `movement_ibfk_2` FOREIGN KEY (`typeid`) REFERENCES `type` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `movement_ibfk_3` FOREIGN KEY (`partnerid`) REFERENCES `partner` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `partner`
+--
+ALTER TABLE `partner`
+  ADD CONSTRAINT `partner_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `user` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `type`
+--
+ALTER TABLE `type`
+  ADD CONSTRAINT `type_ibfk_1` FOREIGN KEY (`taxid`) REFERENCES `tax` (`id`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
