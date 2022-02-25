@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2022 at 07:22 PM
+-- Generation Time: Feb 25, 2022 at 08:35 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.0
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `aquntant`
 --
+CREATE DATABASE IF NOT EXISTS `aquntant` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
+USE `aquntant`;
 
 -- --------------------------------------------------------
 
@@ -85,6 +87,7 @@ CREATE TABLE `type` (
 CREATE TABLE `user` (
   `id` int(5) NOT NULL,
   `username` varchar(15) COLLATE utf8mb4_hungarian_ci NOT NULL,
+  `email` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL,
   `pass` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
@@ -127,7 +130,9 @@ ALTER TABLE `type`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `username` (`username`,`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
