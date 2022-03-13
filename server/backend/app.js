@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const app = express();
 app.use(express.urlencoded({extended: true}))
@@ -22,17 +23,13 @@ var pool = mysql.createPool({
 
 
 
-//login & register  [W.I.P]  -még nem használhatóak
+//login & register  [W.I.P]  -register használható állapotban van
 
-app.post("/register", (req, res) => {
-    const felhasznalo = req.body.felhasznalo;
-    const jelszo = req.body.jelszo;
-    //const jelszoConfirm = req.body.jelszoConfirm;
-    const nev = req.body.nev;
-    const email = req.body.email;
-    const cim = req.body.cim;
-
-    pool.query("SELECT felhasznalo FROM partnerek WHERE email = ?", [email], (error, result) => {
+app.post("/register",  (req, res) => {
+    const {name, email, username, pass, country, postal, address} = req.body
+    
+    q = "SELECT email FROM partner WHERE email = ?"
+    pool.query(q, [email], (error, result) => {
         if(error) {
             console.log(error);
         }
@@ -41,17 +38,20 @@ app.post("/register", (req, res) => {
             return res.render('register', {
                 message: 'Az email foglalt'
             })
-        } /*else if (jelszo !== jelszoConfirm) {
+        } /*else if (pass !== jelszoConfirm) {
             return res.render('register', {
                 message: 'A jelszavak nem azonosak.'
             })
         }
 */
-        let hashJelszo =  bcrypt.hash(jelszo, saltRounds);
-        console.log(hashJelszo);
+        let hashPass =  bcrypt.hashSync(pass, saltRounds);
+        console.log(hashPass);
         
-        placeholders = [felhasznalo, hashJelszo, nev, email, cim]
-        pool.query("INSERT INTO partnerek (nev,felhasznalo,jelszo,email,cim) VALUES (?)", placeholders, (error, result) => {
+        placeholders2 = [name, email, country, postal, address]
+        placeholders = [username,hashPass]
+        q2 = "INSERT INTO user (username, pass) VALUES (?);"+
+             "INSERT INTO partner (name, email, country, postal_code, address, userid) VALUES (?,(SELECT id FROM user WHERE username = ?));"    
+        pool.query(q2, [placeholders, placeholders2,username], (error, result) => {
             if(!error){
                 res.send(result);
             } else {
@@ -64,14 +64,14 @@ app.post("/register", (req, res) => {
     
 })
 
-app.patch("/changepass", async (req, res) => {
-    const felhasznalo = req.body.felhasznalo;
-    const jelszo = req.body.jelszo;
+app.patch("/changepass", async (req, res) => { //[WIP]
+    const username = req.body.username;
+    const pass = req.body.pass;
 
-    let hashJelszo = await bcrypt.hash(jelszo, saltRounds);
-    console.log(hashJelszo);
+    let hashPass = await bcrypt.hash(pass, saltRounds);
+    console.log(hashPass);
 
-    pool.query("UPDATE partnerek SET jelszo=? WHERE felhasznalo=?", [hashJelszo, felhasznalo], (error, result) => {
+    pool.query("UPDATE partner SET pass=? WHERE name=?", [hashPass, username], (error, result) => {
         if(!error) {
             res.send(result);
         } else {
@@ -82,11 +82,11 @@ app.patch("/changepass", async (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-    const felhasznalo = req.body.felhasznalo;
-    const jelszo = req.body.jelszo;
+    const username = req.body.username;
+    const pass = req.body.pass;
 
-    const q = "SELECT * FROM users WHERE felhasznalo = ? AND jelszo = ?;";
-    pool.query(q, [felhasznalo, jelszo] , (error, results) => {
+    const q = "SELECT * FROM users WHERE username = ? AND pass = ?;";
+    pool.query(q, [username, pass] , (error, results) => {
         if (!error) {
             res.send(results);
         } else {
@@ -95,13 +95,12 @@ app.post("/login", (req, res) => {
     })
 })
 
-//listázások
-app.get("/listazas" ,(req, res)=> {
-    const q = "SELECT penzmozgasok.datum, tipusok.tipus, penzmozgasok.osszeg, "+
-        "afa_kulcs.szazalek, partnerek.nev, partnerek.cim, penzmozgasok.megjegyzes FROM penzmozgasok "+ 
-        "INNER JOIN tipusok ON tipusok.id=penzmozgasok.tipus_id "+
-        "INNER JOIN afa_kulcs ON afa_kulcs.id=penzmozgasok.afa_id "+
-        "INNER JOIN partnerek ON partnerek.id=penzmozgasok.partner_id;";
+//listing routes
+app.get("/listing" ,(req, res)=> {
+    const q = "SELECT movement.date, type.name, movement.amount, "+
+        "partner.name, partner.address, movement.comment FROM movement "+ 
+        "INNER JOIN type ON type.id=movement.typeid "+
+        "INNER JOIN partner ON partner.id=movement.partnerid;";
 
     pool.query(q, (error, results) => {
         if (!error) {
@@ -112,15 +111,14 @@ app.get("/listazas" ,(req, res)=> {
     })
 })
 
-app.get("/listazas/partner" ,(req, res)=> {
-    const q = "SELECT penzmozgasok.datum, tipusok.tipus, penzmozgasok.osszeg, "+
-        "afa_kulcs.szazalek, partnerek.nev, partnerek.cim, penzmozgasok.megjegyzes FROM penzmozgasok "+ 
-        "INNER JOIN tipusok ON tipusok.id=penzmozgasok.tipus_id "+
-        "INNER JOIN afa_kulcs ON afa_kulcs.id=penzmozgasok.afa_id "+
-        "INNER JOIN partnerek ON partnerek.id=penzmozgasok.partner_id "+
-        "WHERE partnerek.nev=?";
+app.get("/listing/partner" ,(req, res)=> {
+    const q = "SELECT movement.date, type.name, movement.amount, "+
+        "partner.name, partner.address, movement.comment FROM movement "+ 
+        "INNER JOIN type ON type.id=movement.typeid "+
+        "INNER JOIN partner ON partner.id=movement.partnerid "+
+        "WHERE partner.name=?;";
 
-    pool.query(q, req.body.partner ,(error, results) => {
+    pool.query(q, req.body.name ,(error, results) => {
         if (!error) {
             res.send(results);
         } else {
@@ -129,15 +127,14 @@ app.get("/listazas/partner" ,(req, res)=> {
     })
 })
 
-app.get("/listazas/tipus" ,(req, res)=> {
-    const q = "SELECT penzmozgasok.datum, tipusok.tipus, penzmozgasok.osszeg, "+
-        "afa_kulcs.szazalek, partnerek.nev, partnerek.cim, penzmozgasok.megjegyzes FROM penzmozgasok "+ 
-        "INNER JOIN tipusok ON tipusok.id=penzmozgasok.tipus_id "+
-        "INNER JOIN afa_kulcs ON afa_kulcs.id=penzmozgasok.afa_id "+
-        "INNER JOIN partnerek ON partnerek.id=penzmozgasok.partner_id "+
-        " WHERE tipusok.tipus=?;";
+app.get("/listing/type" ,(req, res)=> {
+    const q = "SELECT movement.date, type.name, movement.amount, "+
+        "partner.name, partner.address, movement.comment FROM movement "+ 
+        "INNER JOIN type ON type.id=movement.typeid "+
+        "INNER JOIN partner ON partner.id=movement.partnerid "+
+        " WHERE type.name=?;";
 
-    pool.query(q, req.body.tipus ,(error, results) => {
+    pool.query(q, req.body.name ,(error, results) => {
         if (!error) {
             res.send(results);
         } else {
@@ -146,15 +143,14 @@ app.get("/listazas/tipus" ,(req, res)=> {
     })
 })
 
-app.get("/listazas/honap" ,(req, res)=> {
-    const q = "SELECT penzmozgasok.datum, tipusok.tipus, penzmozgasok.osszeg, "+
-        "afa_kulcs.szazalek, partnerek.nev, partnerek.cim, penzmozgasok.megjegyzes FROM penzmozgasok "+ 
-        "INNER JOIN tipusok ON tipusok.id=penzmozgasok.tipus_id "+
-        "INNER JOIN afa_kulcs ON afa_kulcs.id=penzmozgasok.afa_id "+
-        "INNER JOIN partnerek ON partnerek.id=penzmozgasok.partner_id "+
-        "WHERE YEAR(penzmozgasok.datum)=? AND MONTH(penzmozgasok.datum)=?;";
+app.get("/listing/month" ,(req, res)=> {
+    const q = "SELECT movement.date, type.name, movement.amount, "+
+        "partner.name, partner.address, movement.comment FROM movement "+ 
+        "INNER JOIN type ON type.id=movement.typeid "+
+        "INNER JOIN partner ON partner.id=movement.partnerid "+
+        "WHERE YEAR(movement.date)=? AND MONTH(movement.date)=?;";
 
-    pool.query(q, req.body.ev ,req.body.honap ,(error, results) => {
+    pool.query(q, req.body.year ,req.body.month ,(error, results) => {
         if (!error) {
             res.send(results);
         } else {
@@ -163,10 +159,10 @@ app.get("/listazas/honap" ,(req, res)=> {
     })
 })
 
-app.get("/osszegzes", (req, res) => {
-    const q = "SELECT sum(case when osszeg < 0 then osszeg else 0 end) AS pozitiv, "
-        +"sum(case when osszeg > 0 then osszeg else 0 end) AS negativ "
-        +"FROM penzmozgasok;";
+app.get("/summary", (req, res) => {
+    const q = "SELECT sum(case when amount < 0 then amount else 0 end) AS pozitiv, "
+        +"sum(case when amount > 0 then amount else 0 end) AS negativ "
+        +"FROM movement;";
 
     pool.query(q, (error, results) => {
         if (!error) {
@@ -178,13 +174,13 @@ app.get("/osszegzes", (req, res) => {
 })
 
 
-//Hozzáadások 
+//add routes
 
 
-app.post("/hozzaad/tipus", (req, res) =>{
-    const q = "INSERT IGNORE INTO tipusok (tipus) VALUES (?);";
+app.post("/add/type", (req, res) =>{
+    const q = "INSERT IGNORE INTO type (name) VALUES (?);";
 
-    pool.query(q, req.body.tipus, (error, results) => {
+    pool.query(q, req.body.name, (error, results) => {
         if (!error) {
             res.send(results);
         } else {
@@ -193,10 +189,10 @@ app.post("/hozzaad/tipus", (req, res) =>{
     })
 })
     
-app.post("/hozzaad/afa", (req, res) =>{
-    const q = "INSERT IGNORE INTO afa_kulcs (szazalek) VALUES (?);";
+app.post("/add/tax", (req, res) =>{
+    const q = "INSERT IGNORE INTO tax (name,percent) VALUES (?);";
 
-    pool.query(q, req.body.afa, (error, results) => {
+    pool.query(q, [req.body.name, req.body.percent], (error, results) => {
         if (!error) {
             res.send(results);
         } else {
@@ -205,9 +201,11 @@ app.post("/hozzaad/afa", (req, res) =>{
     })
 })
 
-app.post("/hozzaad/partner", (req, res) =>{  //biztos kell?
-    const q = "INSERT IGNORE INTO partnerek (nev,cim) VALUES (?);";
-    placeholders = [req.body.nev, req.body.cim];
+
+
+app.post("/add/movement", (req, res) =>{
+    const q = "INSERT INTO movement (date,amount,typeid,partnerid,comment) VALUES (?)";
+    placeholders = [req.body.date, req.body.amount, req.body.typeid, req.body.partnerId, req.body.comment];
     pool.query(q, placeholders, (error, results) => {
         if (!error) {
             res.send(results);
@@ -217,23 +215,11 @@ app.post("/hozzaad/partner", (req, res) =>{  //biztos kell?
     })
 })
 
-app.post("/hozzaad/penzmozgas", (req, res) =>{
-    const q = "INSERT INTO penzmozgasok (datum,osszeg,tipus_id,afa_id,partner_id,megjegyzes) VALUES (?)";
-    placeholders = [req.body.datum, req.body.osszeg, req.body.tipusId, req.body.afaId, req.body.partnerId, req.body.megjegyzes];
-    pool.query(q, placeholders, (error, results) => {
-        if (!error) {
-            res.send(results);
-        } else {
-            res.send(error);
-        }
-    })
-})
+//update routes
 
-//update routing
-
-app.patch("/csere/tipus", (req, res) => {
-    const q = "UPDATE tipusok SET tipus=? WHERE id=?";
-    pool.query(q, [req.body.tipus, req.body.id], (error, result) => {
+app.patch("/change/type", (req, res) => {
+    const q = "UPDATE type SET name=?, taxid=? WHERE id=?";
+    pool.query(q, [req.body.name, req.body.taxid,req.body.id], (error, result) => {
         if (!error) {
             res.send(result);
         } else {
@@ -242,9 +228,9 @@ app.patch("/csere/tipus", (req, res) => {
     })
 })
 
-app.patch("/csere/afa", (req, res) => {
-    const q = "UPDATE afa_kulcs SET szazalek=? WHERE id=?";
-    pool.query(q, [req.body.afa, req.body.id], (error, result) => {
+app.patch("/change/tax", (req, res) => {
+    const q = "UPDATE tax SET name=? ,percent=? WHERE id=?";
+    pool.query(q, [req.body.name, req.body.percent, req.body.id], (error, result) => {
         if (!error) {
             res.send(result);
         } else {
@@ -253,9 +239,9 @@ app.patch("/csere/afa", (req, res) => {
     })
 })
 
-app.patch("/csere/partner", (req, res) => { //gondold át
-    const q = "UPDATE partnerek SET nev=?, cim=? WHERE id=?";
-    pool.query(q, [req.body.nev, req.body.cim, req.body.id], (error, result) => {
+app.patch("/change/partner", (req, res) => { 
+    const q = "UPDATE partner SET name=?, email=?, country=?, postal_code=?, address=? WHERE id=?";
+    pool.query(q, [req.body.name, req.body.email, req.body.country, req.body.postal_code, req.body.address, req.body.id], (error, result) => {
         if (!error) {
             res.send(result);
         } else {
@@ -263,9 +249,9 @@ app.patch("/csere/partner", (req, res) => { //gondold át
         }
     })
 })
-app.patch("/csere/penzmozgasok", (req, res) => {
-    placeholders = [req.body.datum, req.body.osszeg, req.body.tipusId, req.body.afaId, req.body.partnerId, req.body.megjegyzes, req.body.id];
-    const q = "UPDATE penzmozgasok SET datum=?, osszeg=?, tipus_id=?, afa_id=?, partner_id=?, megjegyzes=? WHERE id=?";
+app.patch("/change/movement", (req, res) => {
+    placeholders = [req.body.date, req.body.amount, req.body.typeid, req.body.partnerId, req.body.comment, req.body.id];
+    const q = "UPDATE movement SET date=?, amount=?, typeid=?, partnerid=?, comment=? WHERE id=?";
     pool.query(q, placeholders, (error, result) => {
         if (!error) {
             res.send(result);
@@ -275,10 +261,10 @@ app.patch("/csere/penzmozgasok", (req, res) => {
     })
 })
 
-//torlesek
+//delete routes
 
-app.delete("/torol/tipus/:id", (req, res) => {
-    const q = "DELETE FROM tipusok WHERE id=?";
+app.delete("/delete/name/:id", (req, res) => {
+    const q = "DELETE FROM type WHERE id=?";
     pool.query(q, [req.params.id], (error, result) =>{
         if (!error) {
             res.send(result);
@@ -288,8 +274,8 @@ app.delete("/torol/tipus/:id", (req, res) => {
     })
 })
 
-app.delete("/torol/afa/:id", (req, res) => {
-    const q = "DELETE FROM afa_kulcs WHERE id=?";
+app.delete("/delete/type/:id", (req, res) => {
+    const q = "DELETE FROM type WHERE id=?";
     pool.query(q, [req.params.id], (error, result) =>{
         if (!error) {
             res.send(result);
@@ -299,8 +285,8 @@ app.delete("/torol/afa/:id", (req, res) => {
     })
 })
 
-app.delete("/torol/partner/:id", (req, res) => { //maradhat szerintem.
-    const q = "DELETE FROM partnerek WHERE id=?";
+app.delete("/delete/tax/:id", (req, res) => {
+    const q = "DELETE FROM tax WHERE id=?";
     pool.query(q, [req.params.id], (error, result) =>{
         if (!error) {
             res.send(result);
@@ -310,8 +296,8 @@ app.delete("/torol/partner/:id", (req, res) => { //maradhat szerintem.
     })
 })
 
-app.delete("/torol/penzmozgasok/:id", (req, res) => {
-    const q = "DELETE FROM penzmozgasok WHERE id=?";
+app.delete("/delete/partner/:id", (req, res) => { //maradhat szerintem.
+    const q = "DELETE FROM partner WHERE id=?";
     pool.query(q, [req.params.id], (error, result) =>{
         if (!error) {
             res.send(result);
@@ -320,6 +306,31 @@ app.delete("/torol/penzmozgasok/:id", (req, res) => {
         }
     })
 })
+
+app.delete("/delete/movement/:id", (req, res) => {
+    const q = "DELETE FROM movement WHERE id=?";
+    pool.query(q, [req.params.id], (error, result) =>{
+        if (!error) {
+            res.send(result);
+        } else {
+            res.send(error);
+        }
+    })
+})
+
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    if (!token)
+        return res.status(401).send({ message: "Azonosítás szükséges!" })
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+        if (err)
+            return res.status(403).send({ message: "Nincs jogosultsága!" })
+        req.user = user
+        next()
+    })
+}
 
 app.listen(4000, () => {
     console.log("Server elindítva a 4000-es porton...")
