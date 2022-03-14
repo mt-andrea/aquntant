@@ -14,7 +14,7 @@ const NavbarLoged = () => {
         </NavMenu> 
         <NavBtn >
         <NavBtnLink to = '/order' >
-        Request { /*page for requests*/ } 
+        Order { /*page for ordering from partners*/ } 
         </NavBtnLink> 
         </NavBtn> 
         </Nav>
