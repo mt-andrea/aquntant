@@ -13,20 +13,7 @@ import SignUp from './components/pages/Sign-up';
 import SignIn from './components/pages/Sign-in';
 
 ReactDOM.render(
-    <Router>
-        < App />
-        <Routes>
-          <Route path='/transactions' exact element={<Transactions/>} />
-          <Route path='/new' element={<New/>} />
-          <Route path='/partners' element={<Partners/>} />
-          <Route path='/order' element={<Order/>} />
-          <Route path='/' exact element={<Home/>} />
-          <Route path='/about' element={<About/>} />
-          <Route path='/contact' element={<Contact/>} />
-          <Route path='/sign-up' element={<SignUp/>} />
-          <Route path='/sign-in' element={<SignIn/>} />
-        </Routes>
-    </Router>,
+    <App/>,
 
     document.getElementById('root')
 );
