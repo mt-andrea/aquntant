@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 25, 2022 at 08:35 PM
--- Server version: 10.4.17-MariaDB
--- PHP Version: 8.0.0
+-- Generation Time: Mar 14, 2022 at 03:59 PM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 8.1.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `aquntant`
 --
-CREATE DATABASE IF NOT EXISTS `aquntant` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_hungarian_ci;
-USE `aquntant`;
 
 -- --------------------------------------------------------
 
@@ -87,8 +85,7 @@ CREATE TABLE `type` (
 CREATE TABLE `user` (
   `id` int(5) NOT NULL,
   `username` varchar(15) COLLATE utf8mb4_hungarian_ci NOT NULL,
-  `email` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL,
-  `pass` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL
+  `pass` varchar(255) COLLATE utf8mb4_hungarian_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
@@ -130,9 +127,7 @@ ALTER TABLE `type`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD KEY `username` (`username`,`email`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
