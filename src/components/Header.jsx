@@ -3,7 +3,7 @@ import NavbarLoged from './Navbar/NavbarLoged'
 import NavbarNotLoged from './Navbar/NavbarNotLoged'
 
 
-let loged_in = true
+let loged_in = false
 
 const Header = () => {
   return (
