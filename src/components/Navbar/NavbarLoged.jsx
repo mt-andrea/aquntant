@@ -1,20 +1,22 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
-import { Bars, Nav, NavBtn, NavBtnLink, NavMenu } from './NavbarElements'
+import {Nav, NavBtn, NavBtnLink, NavMenu, NavLink } from './NavbarElements'
+import icon from '../../pic/icon_1.svg'
 
 const NavbarLoged = () => {
     return ( 
         <Nav >
-        <NavLink to = '/' activeStyle >
-        <img src ={require('../../pic/icon_1.svg')} alt='Aquntant'/>
-        </NavLink> <Bars />
+        <NavLink to = '/transactions' activeStyle >
+        <img src ={icon} alt='Aquntant' height={80}/>
+        </NavLink>
         <NavMenu >
-        <NavLink to = '/about' activeStyle>About { /*page about how to use the app */ } </NavLink> 
-        <NavLink to = '/contact' activeStyle>Contact { /*page to show contact options if there's any problem with the usage */ } </NavLink> 
+        <NavLink to = '/new' activeStyle>New Transaction { /*page to add a new trasaction */ }
+         </NavLink> 
+        <NavLink to = '/partners' activeStyle>Partners { /*page to show the list of partners the user has*/ } 
+        </NavLink> 
         </NavMenu> 
         <NavBtn >
         <NavBtnLink to = '/order' >
-        Request { /*page for requests*/ } 
+        Order { /*page for ordering from partners*/ } 
         </NavBtnLink> 
         </NavBtn> 
         </Nav>
