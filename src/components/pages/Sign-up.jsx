@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SuccessfullReg from './Successfull-Reg';
+import { useNavigate } from 'react-router-dom';
 
 
 
 
 export default function SignUp(props)  {
   
+
+  let navigate = useNavigate();
+
   const [message, setMessage] = useState("")
 
   const [data, setData] = useState({
@@ -49,8 +53,12 @@ export default function SignUp(props)  {
           })
       })
           .then((response) => response.json())
-          .then(json => {setMessage(json.message) })
-            .catch(err => console.log(err))
+          .then(json => {
+            if(json.message == "Success") {
+              navigate("/successfull-reg")
+            }
+          })
+          .catch(err => console.log(err))
   }
 
   return (
@@ -76,7 +84,7 @@ export default function SignUp(props)  {
           </div>
       </fieldset>
       <div className='d-flex flex-row justify-content-around'>
-      <button className='form-control btn m-3' style={{background:'#0033FF', color:'#A8FBFF'}} href='/successfull-reg' type="submit">Register</button> 
+      <button className='form-control btn m-3' style={{background:'#0033FF', color:'#A8FBFF'}} onClick={register} href='/successfull-reg' type="submit">Register</button> 
       <button className='form-control btn m-3' style={{color:'#0033FF', border:'solid 1px #0033FF'}} type="reset">Reset</button>
       </div>
       <p>{message}</p>
