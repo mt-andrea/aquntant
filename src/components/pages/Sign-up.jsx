@@ -1,5 +1,6 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import SuccessfullReg from './Successfull-Reg';
 
 const SignUp = () => {
   return (
@@ -25,7 +26,7 @@ const SignUp = () => {
           </div>
       </fieldset>
       <div className='d-flex flex-row justify-content-around'>
-      <button className='form-control btn m-3' style={{background:'#0033FF', color:'#A8FBFF',}} type="submit">Register</button> 
+      <button className='form-control btn m-3' style={{background:'#0033FF', color:'#A8FBFF'}} href='/successfull-reg' type="submit">Register</button> 
       <button className='form-control btn m-3' style={{color:'#0033FF', border:'solid 1px #0033FF'}} type="reset">Reset</button>
       </div>
         </form>
