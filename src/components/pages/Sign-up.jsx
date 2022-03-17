@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import SuccessfullReg from './Successfull-Reg';
 
 
 
@@ -53,9 +54,9 @@ export default function SignUp(props)  {
   }
 
   return (
-    <div className='d-flex justify-content-center'>
+    <div className='d-flex justify-content-center' style={{background: '#A8FBFF', height: '100vh'}}>
         <form>
-      <fieldset className='m-3' style={{border: "3px solid #0D00FF", borderRadius:'20px', width: '50vw'}}>
+      <fieldset className='m-3' style={{width: '50vw'}}>
         <legend className='text-center'>Sign Up</legend>
           <div className='d-flex flex-md-row justify-content-evenly m-2'>
           <label className='d-flex flex-column align-items-end w-25' htmlFor="username">Username: </label>
@@ -75,7 +76,8 @@ export default function SignUp(props)  {
           </div>
       </fieldset>
       <div className='d-flex flex-row justify-content-around'>
-      <button className='form-control btn btn-info m-3' type="submit" onClick={register}>Register</button> <button className='form-control btn btn-outline-info m-3' type="reset">Reset</button>
+      <button className='form-control btn m-3' style={{background:'#0033FF', color:'#A8FBFF'}} href='/successfull-reg' type="submit">Register</button> 
+      <button className='form-control btn m-3' style={{color:'#0033FF', border:'solid 1px #0033FF'}} type="reset">Reset</button>
       </div>
       <p>{message}</p>
         </form>

@@ -10,6 +10,7 @@ import Order from './pages/Order'
 import Partners from './pages/Partners'
 import SignIn from './pages/Sign-in'
 import SignUp from './pages/Sign-up'
+import SuccessfullReg from './pages/Successfull-Reg'
 import Transactions from './pages/Transactions'
 
 const App = () => {
@@ -26,6 +27,7 @@ const App = () => {
       <Route path='/contact' element={<Contact/>} />
       <Route path='/sign-up' element={<SignUp/>} />
       <Route path='/sign-in' element={<SignIn/>} />
+      <Route path='/successfull-reg' element={<SuccessfullReg/>} />
     </Routes>
     <Footer/>
 </Router>
