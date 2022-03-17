@@ -38,7 +38,7 @@ app.post("/register",  (req, res) => {
             return res.render('register', {
                 message: 'Az email foglalt'
             })
-        } /*else if (pass !== jelszoConfirm) {
+        } /*else if (pass !== passConfirm) {
             return res.render('register', {
                 message: 'A jelszavak nem azonosak.'
             })
@@ -64,14 +64,14 @@ app.post("/register",  (req, res) => {
     
 })
 
-app.patch("/changepass", async (req, res) => { //[WIP]
+app.patch("/changepass", (req, res) => { 
     const username = req.body.username;
     const pass = req.body.pass;
 
-    let hashPass = await bcrypt.hash(pass, saltRounds);
+    let hashPass =  bcrypt.hashSync(pass, saltRounds);
     console.log(hashPass);
 
-    pool.query("UPDATE partner SET pass=? WHERE name=?", [hashPass, username], (error, result) => {
+    pool.query("UPDATE user SET pass=? WHERE username=?", [hashPass, username], (error, result) => {
         if(!error) {
             res.send(result);
         } else {
@@ -81,28 +81,43 @@ app.patch("/changepass", async (req, res) => { //[WIP]
 
 })
 
-app.post("/login", (req, res) => {
-    const username = req.body.username;
-    const pass = req.body.pass;
-
-    const q = "SELECT * FROM users WHERE username = ? AND pass = ?;";
-    pool.query(q, [username, pass] , (error, results) => {
-        if (!error) {
-            res.send(results);
-        } else {
-            res.send(error);
+app.post("/login", function (req, res) {
+    const { username, pass } = req.body;
+    const q = "SELECT * FROM user WHERE username = ?";
+    pool.query(q, [username],
+        function (error, result) {
+            if (error)
+                res.status(500).send({ message: "Adatbázis hiba!" });
+            else if (result.length == 0) {
+                res.status(400).send({ message: "Nincs ilyen nevű felhasználó!" })
+            } else {
+                user = JSON.parse(JSON.stringify(result[0]));
+                if (!bcrypt.compareSync(pass, user.pass))
+                    return res.status(401).send({ message: "Hibás jelszó!" })
+                const token = jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: 3600 })
+                res.json({ token: token, message: "Sikeres bejelentkezés." })
+            }
         }
-    })
+    )
+})
+
+app.post("/admin", (req, res) => {  //[WIP]
+    const hashPass = process.env.ADMIN
+    if (!bcrypt.compareSync(req.body.pass, hashPass))
+        return res.status(401).send({ message: "Hibás jelszó!"})
+    const token = jwt.sign({ pass: req.body.pass} , process.env.TOKEN_SECRET, {expiresIn:3600})
+    res.json({ token: token, message: "Sikeres bejelentkezés."})
 })
 
 //listing routes
-app.get("/listing" ,(req, res)=> {
+app.get("/listing", authenticateToken, (req, res)=> {
     const q = "SELECT movement.date, type.name, movement.amount, "+
-        "partner.name, partner.address, movement.comment FROM movement "+ 
+        "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
         "INNER JOIN type ON type.id=movement.typeid "+
-        "INNER JOIN partner ON partner.id=movement.partnerid;";
-
-    pool.query(q, (error, results) => {
+        "INNER JOIN partner ON partner.id=movement.partnerid "+
+        "INNER JOIN user ON user.id=partner.userid "+
+        "WHERE user.username=?;";        
+    pool.query(q,[req.user.username], (error, results) => {
         if (!error) {
             res.send(results);
         } else {
@@ -111,14 +126,30 @@ app.get("/listing" ,(req, res)=> {
     })
 })
 
-app.get("/listing/partner" ,(req, res)=> {
+app.get("/listing/partner" , authenticateToken,(req, res)=> {
+    const q = "SELECT movement.date, type.name, movement.amount, "+
+        "partner.name, partner.address, user.username,movement.comment FROM movement "+ 
+        "INNER JOIN type ON type.id=movement.typeid "+
+        "INNER JOIN partner ON partner.id=movement.partnerid "+
+        "INNER JOIN user ON user.id=partner.userid "+
+        "WHERE partner.name=? AND user.username=?;";
+    pool.query(q, [req.body.name, req.user.username] ,(error, results) => {
+        if (!error) {
+            res.send(results);
+        } else {
+            res.send(error);
+        }
+    })
+})
+
+app.get("/listing/type", authenticateToken,(req, res)=> {
     const q = "SELECT movement.date, type.name, movement.amount, "+
         "partner.name, partner.address, movement.comment FROM movement "+ 
         "INNER JOIN type ON type.id=movement.typeid "+
         "INNER JOIN partner ON partner.id=movement.partnerid "+
-        "WHERE partner.name=?;";
-
-    pool.query(q, req.body.name ,(error, results) => {
+        "INNER JOIN user ON user.id=partner.userid "+
+        " WHERE type.name=? AND user.username=?;";
+    pool.query(q, [req.body.name, req.user.username] ,(error, results) => {
         if (!error) {
             res.send(results);
         } else {
@@ -127,14 +158,14 @@ app.get("/listing/partner" ,(req, res)=> {
     })
 })
 
-app.get("/listing/type" ,(req, res)=> {
+app.get("/listing/month", authenticateToken,(req, res)=> {
     const q = "SELECT movement.date, type.name, movement.amount, "+
         "partner.name, partner.address, movement.comment FROM movement "+ 
         "INNER JOIN type ON type.id=movement.typeid "+
         "INNER JOIN partner ON partner.id=movement.partnerid "+
-        " WHERE type.name=?;";
-
-    pool.query(q, req.body.name ,(error, results) => {
+        "INNER JOIN user ON user.id=partner.userid "+
+        "WHERE YEAR(movement.date)=? AND MONTH(movement.date)=? AND user.username=?;";
+    pool.query(q, [req.body.year ,req.body.month, req.user.username] ,(error, results) => {
         if (!error) {
             res.send(results);
         } else {
@@ -143,27 +174,10 @@ app.get("/listing/type" ,(req, res)=> {
     })
 })
 
-app.get("/listing/month" ,(req, res)=> {
-    const q = "SELECT movement.date, type.name, movement.amount, "+
-        "partner.name, partner.address, movement.comment FROM movement "+ 
-        "INNER JOIN type ON type.id=movement.typeid "+
-        "INNER JOIN partner ON partner.id=movement.partnerid "+
-        "WHERE YEAR(movement.date)=? AND MONTH(movement.date)=?;";
-
-    pool.query(q, req.body.year ,req.body.month ,(error, results) => {
-        if (!error) {
-            res.send(results);
-        } else {
-            res.send(error);
-        }
-    })
-})
-
-app.get("/summary", (req, res) => {
+app.get("/summary", authenticateToken,(req, res) => {
     const q = "SELECT sum(case when amount < 0 then amount else 0 end) AS pozitiv, "
         +"sum(case when amount > 0 then amount else 0 end) AS negativ "
         +"FROM movement;";
-
     pool.query(q, (error, results) => {
         if (!error) {
             res.send(results);
@@ -296,7 +310,7 @@ app.delete("/delete/tax/:id", (req, res) => {
     })
 })
 
-app.delete("/delete/partner/:id", (req, res) => { //maradhat szerintem.
+app.delete("/delete/partner/:id", (req, res) => { 
     const q = "DELETE FROM partner WHERE id=?";
     pool.query(q, [req.params.id], (error, result) =>{
         if (!error) {
@@ -319,6 +333,29 @@ app.delete("/delete/movement/:id", (req, res) => {
 })
 
 
+app.post("/test/add/all", (req, res) =>{    //only for testing and easier data insertion
+    const {taxname,taxpercent,typename,partnername,username,email,country,postal,address,pass,date,amount,comment} = req.body;
+
+    const q = "INSERT INTO tax (name, percent) VALUES (?);"+
+              "INSERT INTO type (name, taxid) VALUES (?,(SELECT id FROM tax WHERE name = ?));"+
+              "INSERT INTO user (username, pass) VALUES (?);"+
+              "INSERT INTO partner (name, email, country, postal_code, address, userid) VALUES (?,(SELECT id FROM user WHERE username = ?));"+
+              "INSERT INTO movement (date,amount,typeid,partnerid,comment) VALUES "
+              +"(?,(SELECT id FROM type WHERE name = ?),(SELECT id FROM user WHERE username = ?),?);";
+              
+        let hashPass =  bcrypt.hashSync(pass, saltRounds);
+        
+        placeholders = [[taxname, taxpercent],typename, taxname, [username, hashPass],[partnername,email,country,postal,address],username,[date, amount], typename, username, comment];
+    pool.query(q, placeholders, (error, results) => {
+        if (!error) {
+            res.send(results);
+        } else {
+            res.send(error);
+        }
+    })
+})
+
+
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
@@ -332,6 +369,10 @@ function authenticateToken(req, res, next) {
     })
 }
 
+
+    
+
+
 app.listen(4000, () => {
-    console.log("Server elindítva a 4000-es porton...")
+    console.log("Server started on port 4000...")
 });
