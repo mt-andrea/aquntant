@@ -1,8 +1,8 @@
+/* eslint-disable eqeqeq */
 import React, { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import SuccessfullReg from './Successfull-Reg';
 import { useNavigate } from 'react-router-dom';
-
+import {ExclamationCircleFill} from 'react-bootstrap-icons'
 
 
 
@@ -60,12 +60,17 @@ export default function SignUp(props)  {
           })
           .catch(err => console.log(err))
   }
-
+  const Message = () => {
+    return (
+      <p><ExclamationCircleFill/> {message}</p> 
+    )
+  }
   return (
     <div className='d-flex justify-content-center' style={{background: '#A8FBFF', height: '100vh'}}>
         <form>
       <fieldset className='m-3' style={{width: '50vw'}}>
         <legend className='text-center'>Sign Up</legend>
+        <p className='text-center' style={{color:"red",fontWeight:"bolder"}}>{<Message/>}</p>
           <div className='d-flex flex-md-row justify-content-evenly m-2'>
           <label className='d-flex flex-column align-items-end w-25' htmlFor="username">Username: </label>
           <input className='d-flex flex-column form-control w-50' type="text" name="username" id="username" value={data.username} onChange={change} />
@@ -87,7 +92,6 @@ export default function SignUp(props)  {
       <button className='form-control btn m-3' style={{background:'#0033FF', color:'#A8FBFF'}} onClick={register} href='/successfull-reg' type="submit">Register</button> 
       <button className='form-control btn m-3' style={{color:'#0033FF', border:'solid 1px #0033FF'}} type="reset">Reset</button>
       </div>
-      <p>{message}</p>
         </form>
     </div>
   )
