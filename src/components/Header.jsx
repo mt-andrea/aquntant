@@ -3,11 +3,10 @@ import NavbarLoged from './Navbar/NavbarLoged'
 import NavbarNotLoged from './Navbar/NavbarNotLoged'
 
 
-let loged_in = false
+const Header = (props) => {
 
-const Header = () => {
   return (
-    loged_in ?
+    props.loged ?
         <NavbarLoged />
       :
         <NavbarNotLoged />

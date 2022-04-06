@@ -16,7 +16,7 @@ import Transactions from './pages/Transactions'
 const App = () => {
   return (
     <Router>
-    <Header/>
+    <Header loged={false} />
     <Routes>
       <Route path='/transactions' exact element={<Transactions/>} />
       <Route path='/new' element={<New/>} />
