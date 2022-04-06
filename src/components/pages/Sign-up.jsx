@@ -1,10 +1,10 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import SuccessfullReg from './Successfull-Reg';
+import style from '../../const/style'
 
 const SignUp = () => {
   return (
-    <div className='d-flex justify-content-center' style={{background: '#A8FBFF', height: '100vh'}}>
+    <div className='d-flex justify-content-center' style={style.content} >
         <form>
       <fieldset className='m-3' style={{width: '50vw'}}>
         <legend className='text-center'>Sign Up</legend>
@@ -26,8 +26,8 @@ const SignUp = () => {
           </div>
       </fieldset>
       <div className='d-flex flex-row justify-content-around'>
-      <button className='form-control btn m-3' style={{background:'#0033FF', color:'#A8FBFF'}} href='/successfull-reg' type="submit">Register</button> 
-      <button className='form-control btn m-3' style={{color:'#0033FF', border:'solid 1px #0033FF'}} type="reset">Reset</button>
+      <button className='form-control btn m-3' style={style.btnPrim} type="submit">Register</button> 
+      <button className='form-control btn m-3' style={style.btnSec} type="reset">Reset</button>
       </div>
         </form>
     </div>
