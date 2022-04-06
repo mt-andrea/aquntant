@@ -61,8 +61,9 @@ export default function SignUp(props)  {
           .catch(err => console.log(err))
   }
   const Message = () => {
+    let feltetel=message!=""
     return (
-      <p><ExclamationCircleFill/> {message}</p> 
+      <p>{feltetel && <ExclamationCircleFill/>} {message}</p> 
     )
   }
   return (
