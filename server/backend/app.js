@@ -24,8 +24,8 @@ var pool = mysql.createPool({
 
 
 //login & register  [W.I.P]  -register használható állapotban van
-
-app.post("/register",  (req, res) => {
+/*
+app.post("/registerold",  (req, res) => {
     const {name, email, username, pass, country, postal, address} = req.body
     
     q = "SELECT email FROM partner WHERE email = ?"
@@ -38,12 +38,7 @@ app.post("/register",  (req, res) => {
             return res.render('register', {
                 message: 'Az email foglalt'
             })
-        } /*else if (pass !== passConfirm) {
-            return res.render('register', {
-                message: 'A jelszavak nem azonosak.'
-            })
-        }
-*/
+        } 
         let hashPass =  bcrypt.hashSync(pass, saltRounds);
         console.log(hashPass);
         
@@ -56,6 +51,45 @@ app.post("/register",  (req, res) => {
                 res.send(result);
             } else {
                 res.send(error)
+            }
+        })
+
+        
+    })
+    
+})
+*/
+app.post("/register",  (req, res) => {
+    const {username, email, password } = req.body
+    
+    q = "SELECT email FROM partner WHERE email = ?"
+    pool.query(q, [email], (error, result) => {
+        if(error) {
+            console.log(error);
+        }
+
+        if(result.length > 0) {
+            return res.render('register', {
+                message: 'Az email foglalt'
+            })
+        } /*else if (password !== passConfirm) {
+            return res.render('register', {
+                message: 'A jelszavak nem azonosak.'
+            })
+        }
+*/
+        let hashPass =  bcrypt.hashSync(password, 10);
+        console.log(hashPass);
+        
+        
+        placeholders = [username,email,hashPass]
+        q2 = "INSERT INTO user (username, email, pass) VALUES (?);"
+        pool.query(q2, [placeholders], (error, result) => {
+            if(!error){
+                res.send({message: "Success"});
+            } else {
+                res.send({message: "Failure"})
+
             }
         })
 
