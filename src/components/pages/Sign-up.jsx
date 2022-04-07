@@ -30,8 +30,8 @@ export default function SignUp(props)  {
 
     function register(e) {
       e.preventDefault()
-      if (data.username=="" || data.password=="") {
-          setMessage("Username or password is empty!")
+      if (data.username=="" || data.password=="" || data.email=="") {
+          setMessage("Username, email or password is empty!")
           return
       }
 
@@ -56,6 +56,8 @@ export default function SignUp(props)  {
           .then(json => {
             if(json.message == "Success") {
               navigate("/successfull-reg")
+            } else {
+              setMessage(json.message)
             }
           })
           .catch(err => console.log(err))
