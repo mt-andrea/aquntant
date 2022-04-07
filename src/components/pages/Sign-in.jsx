@@ -28,9 +28,9 @@ const SignIn = (props) => {
     if (data.username == "" || data.password == "") {
       setMessage("Username or password is empty!")
       return
-    }else{
+    }/*else{
       props.loged=true
-    }
+    }*/
 
     fetch('http://localhost:4000/login', {
           method: 'POST',
