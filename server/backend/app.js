@@ -67,7 +67,7 @@ app.post("/login",(req, res) => {
                 user = JSON.parse(JSON.stringify(result[0]));
                 if (!bcrypt.compareSync(password, user.pass))
                     return res.send({message: "Incorrect username or password"})
-                const token = jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: 3600 })
+                const token = jwt.sign(user, process.env.TOKEN_SECRET)
                 res.json({ token: token, message: "Success" })
                 
             }
@@ -92,25 +92,7 @@ app.patch("/changepass", (req, res) => {
 
 })
 
-app.post("/login", function (req, res) {
-    const { username, pass } = req.body;
-    const q = "SELECT * FROM user WHERE username = ?";
-    pool.query(q, [username],
-        function (error, result) {
-            if (error)
-                res.status(500).send({ message: "Adatbázis hiba!" });
-            else if (result.length == 0) {
-                res.status(400).send({ message: "Nincs ilyen nevű felhasználó!" })
-            } else {
-                user = JSON.parse(JSON.stringify(result[0]));
-                if (!bcrypt.compareSync(pass, user.pass))
-                    return res.status(401).send({ message: "Hibás jelszó!" })
-                const token = jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: 3600 })
-                res.json({ token: token, message: "Sikeres bejelentkezés." })
-            }
-        }
-    )
-})
+
 
 app.post("/admin", (req, res) => {  //[WIP]
     const hashPass = process.env.ADMIN
