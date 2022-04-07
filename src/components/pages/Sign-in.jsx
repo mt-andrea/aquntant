@@ -28,6 +28,8 @@ const SignIn = (props) => {
     if (data.username == "" || data.password == "") {
       setMessage("Username or password is empty!")
       return
+    }else{
+      props.loged=true
     }
 
     fetch('http://localhost:4000/login', {
@@ -75,7 +77,7 @@ const SignIn = (props) => {
       <form>
         <fielset className='m-3' style={{ width: '50vw' }}>
           <legend className='text-center'>Sign In</legend>
-          <p className='text-center' style={{ color: "red", fontWeight: "bolder" }}>{<Message />}</p>
+          <p className='text-center' style={style.message}>{<Message />}</p>
           <div className='d-flex flex-md-row justify-content-evenly m-2'>
             <label className='d-flex flex-column align-items-end w-25' htmlFor="username">Username: </label>
             <input className='d-flex flex-column form-control w-50' type="text" name="username" id="username" value={data.username} onChange={change} />
