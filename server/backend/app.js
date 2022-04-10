@@ -104,8 +104,8 @@ app.post("/admin", (req, res) => {  //[WIP]
 
 //listing routes
 app.get("/listing", authenticateToken, (req, res)=> {
-    const q = "SELECT movement.date, type.name, movement.amount, "+
-        "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
+    const q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name AS type_name, movement.amount, "+
+        "partner.name AS name, partner.address, user.username ,movement.comment FROM movement "+ 
         "INNER JOIN type ON type.id=movement.typeid "+
         "INNER JOIN partner ON partner.id=movement.partnerid "+
         "INNER JOIN user ON user.id=partner.userid "+
@@ -119,52 +119,72 @@ app.get("/listing", authenticateToken, (req, res)=> {
     })
 })
 
-app.get("/listing/partner" , authenticateToken,(req, res)=> {
-    const q = "SELECT movement.date, type.name, movement.amount, "+
-        "partner.name, partner.address, user.username,movement.comment FROM movement "+ 
-        "INNER JOIN type ON type.id=movement.typeid "+
-        "INNER JOIN partner ON partner.id=movement.partnerid "+
-        "INNER JOIN user ON user.id=partner.userid "+
-        "WHERE partner.name=? AND user.username=?;";
-    pool.query(q, [req.body.name, req.user.username] ,(error, results) => {
-        if (!error) {
-            res.send(results);
-        } else {
-            res.send(error);
-        }
-    })
-})
 
-app.get("/listing/type", authenticateToken,(req, res)=> {
-    const q = "SELECT movement.date, type.name, movement.amount, "+
-        "partner.name, partner.address, movement.comment FROM movement "+ 
+app.post("/listing/filtered", authenticateToken,(req,res) => {
+    let {in_out,month} = req.body;
+    let ph =[]
+    let q ="";
+    if(in_out == "0" && month =="0") {
+        q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name AS type_name, movement.amount, "+
+        "partner.name AS name, partner.address, user.username ,movement.comment FROM movement "+ 
         "INNER JOIN type ON type.id=movement.typeid "+
         "INNER JOIN partner ON partner.id=movement.partnerid "+
         "INNER JOIN user ON user.id=partner.userid "+
-        " WHERE type.name=? AND user.username=?;";
-    pool.query(q, [req.body.name, req.user.username] ,(error, results) => {
-        if (!error) {
-            res.send(results);
+        "WHERE user.username=?;"; 
+        ph=[req.user.username]
+    }
+    if(in_out == "+" && month != "0") {
+        q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name, movement.amount, "+
+        "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
+        "INNER JOIN type ON type.id=movement.typeid "+
+        "INNER JOIN partner ON partner.id=movement.partnerid "+
+        "INNER JOIN user ON user.id=partner.userid "+
+        "WHERE movement.amount>0 AND MONTH(movement.date)=? AND user.username=?;";
+        ph = [month, req.user.username]
+    } if(in_out == "+" && month == "0") {
+        q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name, movement.amount, "+
+        "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
+        "INNER JOIN type ON type.id=movement.typeid "+
+        "INNER JOIN partner ON partner.id=movement.partnerid "+
+        "INNER JOIN user ON user.id=partner.userid "+
+        "WHERE movement.amount>0 AND user.username=?;";
+        ph=[req.user.username]
+    }
+     if(in_out == "-" && month != "0") {
+        q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name, movement.amount, "+
+        "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
+        "INNER JOIN type ON type.id=movement.typeid "+
+        "INNER JOIN partner ON partner.id=movement.partnerid "+
+        "INNER JOIN user ON user.id=partner.userid "+
+        "WHERE movement.amount<0 AND MONTH(movement.date)=? AND user.username=?;";
+        ph=[month, req.user.username]
+    } if(in_out == "-" && month =="0") {
+        q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name, movement.amount, "+
+        "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
+        "INNER JOIN type ON type.id=movement.typeid "+
+        "INNER JOIN partner ON partner.id=movement.partnerid "+
+        "INNER JOIN user ON user.id=partner.userid "+
+        "WHERE movement.amount<0 AND user.username=?;";
+        ph=[req.user.username]
+    } 
+     if(in_out == "0" && month !="0") {
+        q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name, movement.amount, "+
+        "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
+        "INNER JOIN type ON type.id=movement.typeid "+
+        "INNER JOIN partner ON partner.id=movement.partnerid "+
+        "INNER JOIN user ON user.id=partner.userid "+
+        "WHERE MONTH(movement.date)=? AND user.username=?;";
+        ph=[month, req.user.username]
+    } 
+    pool.query(q, ph, (error, result)=> {
+        if(!error) {
+            res.send(result)
         } else {
-            res.send(error);
+            res.send(error)
         }
     })
-})
 
-app.get("/listing/month", authenticateToken,(req, res)=> {
-    const q = "SELECT movement.date, type.name, movement.amount, "+
-        "partner.name, partner.address, movement.comment FROM movement "+ 
-        "INNER JOIN type ON type.id=movement.typeid "+
-        "INNER JOIN partner ON partner.id=movement.partnerid "+
-        "INNER JOIN user ON user.id=partner.userid "+
-        "WHERE YEAR(movement.date)=? AND MONTH(movement.date)=? AND user.username=?;";
-    pool.query(q, [req.body.year ,req.body.month, req.user.username] ,(error, results) => {
-        if (!error) {
-            res.send(results);
-        } else {
-            res.send(error);
-        }
-    })
+     
 })
 
 app.get("/summary", authenticateToken,(req, res) => {
