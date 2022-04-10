@@ -15,7 +15,7 @@ const SignIn = (props) => {
     password: ""
   })
 
-  function change(e) {
+  function change(e) {  //without this, we are unable to type our username & password in
     const { name, value } = e.target
     setData({
       ...data,
@@ -28,9 +28,34 @@ const SignIn = (props) => {
     if (data.username == "" || data.password == "") {
       setMessage("Username or password is empty!")
       return
-    }else{
+    }/*else{
       props.loged=true
-    }
+    }*/
+
+    fetch('http://localhost:4000/login', {
+          method: 'POST',
+          headers: {
+              'Content-type': 'application/json;charset=utf-8'
+          },
+          body: JSON.stringify({
+              "username": data.username,
+              "password": data.password
+          })
+      })
+          .then((response) => response.json())
+          .then(json => {
+            
+            if (json.message == "Success") {
+              sessionStorage.token = json.token
+              props.beallit({ name:data.name, token:json.token}) //currently soft refresh for navbar
+              navigate("/transactions")
+            } else {
+              setMessage(json.message)
+            }
+              
+            
+          })
+          .catch(err => console.log(err))
   }
 
   const reg = (e) => {
@@ -44,6 +69,8 @@ const SignIn = (props) => {
       <p>{feltetel && <ExclamationCircleFill />} {message}</p>
     )
   }
+
+  
 
   return (
     <div className='d-flex justify-content-center' style={style.content}>
