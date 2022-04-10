@@ -1,20 +1,21 @@
 import React from 'react'
+import style from '../../const/style'
 
 const Filter = () => {
   return (
-    <div>
+    <div  style={style.strip_form}>
         <form>
-            <fieldset>
-                <div>
-                    <label htmlFor='in_out'>Income/Outcome </label>
-                    <select id='in_out'>
+            <fieldset className='d-flex flex-md-row justify-content-evenly m-2'>
+                <div className='d-flex flex-row align-items-center'>
+                    <label className='m-2' htmlFor='in_out'>Income/Outcome </label>
+                    <select className='form-control p-1' id='in_out'>
                         <option value={'-'}>Outcome</option>
                         <option value={'+'}>Income</option>
                     </select>
                 </div>
-                <div>
-                    <label htmlFor='month'>Month</label>
-                    <select id='month'>
+                <div className='d-flex flex-row align-items-center'>
+                    <label className='m-2' htmlFor='month'>Month</label>
+                    <select className='form-control p-1' id='month'>
                         <option value={'01'}>January</option>
                         <option value={'02'}>February</option>
                         <option value={'03'}>March</option>
@@ -29,8 +30,11 @@ const Filter = () => {
                         <option value={'12'}>December</option>
                     </select>
                 </div>
-                <div>
-                    <label htmlFor='partner'>Partner</label>
+                <div className='d-flex flex-row align-items-center'>
+                    <label className='m-2' htmlFor='partner'>Partner</label>
+                    <select  className='form-control p-1' id='partner'>
+
+                    </select>
                 </div>
             </fieldset>
         </form>

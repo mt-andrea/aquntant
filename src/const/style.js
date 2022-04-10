@@ -15,6 +15,13 @@ const style = {
     message: {
         color: colors.piros,
         fontWeight: "bolder"
+    },
+    strip_form:{
+        width:'80%',
+        border: 'solid 1px ' + colors.sotetkek,
+        borderRadius:5,
+        height:50,
+        background:colors.feher
     }
 }
 export default style

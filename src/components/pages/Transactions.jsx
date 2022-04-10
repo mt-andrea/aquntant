@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import style from '../../const/style'
 import Filter from '../sub/Filter'
 
 const Transactions = () => {
@@ -24,9 +25,15 @@ const Transactions = () => {
   }, []);
 
   return (
-    <div>
+    <div className='d-flex flex-column align-items-center' style={style.content}>
       <Filter/>
-      <div>{information && information.length>0 && information.map((item)=><p>{item.amount}</p>)}</div>
+      <table className='table table-striped table-hover'>{information && information.length>0 && information.map(
+        (item)=>
+        <tr>
+        <td>{item.date}</td>
+        <td>{item.amount}</td>
+        <td>{item.comment}</td>
+        </tr>)}</table>
     </div>
   )
 }

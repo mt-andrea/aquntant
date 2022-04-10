@@ -21,7 +21,7 @@ const App = () => {
 });
   return (
     <Router>
-    <Header loged={false} />
+    <Header />
     <Routes>
       <Route path='/transactions' exact element={<Transactions/>} />
       <Route path='/new' element={<New/>} />
