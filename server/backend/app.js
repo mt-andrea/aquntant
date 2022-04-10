@@ -24,78 +24,55 @@ var pool = mysql.createPool({
 
 
 //login & register  [W.I.P]  -register használható állapotban van
-/*
-app.post("/registerold",  (req, res) => {
-    const {name, email, username, pass, country, postal, address} = req.body
-    
-    q = "SELECT email FROM partner WHERE email = ?"
-    pool.query(q, [email], (error, result) => {
-        if(error) {
-            console.log(error);
-        }
 
-        if(result.length > 0) {
-            return res.render('register', {
-                message: 'Az email foglalt'
-            })
-        } 
-        let hashPass =  bcrypt.hashSync(pass, saltRounds);
-        console.log(hashPass);
-        
-        placeholders2 = [name, email, country, postal, address]
-        placeholders = [username,hashPass]
-        q2 = "INSERT INTO user (username, pass) VALUES (?);"+
-             "INSERT INTO partner (name, email, country, postal_code, address, userid) VALUES (?,(SELECT id FROM user WHERE username = ?));"    
-        pool.query(q2, [placeholders, placeholders2,username], (error, result) => {
-            if(!error){
-                res.send(result);
-            } else {
-                res.send(error)
-            }
-        })
-
-        
-    })
-    
-})
-*/
 app.post("/register",  (req, res) => {
     const {username, email, password } = req.body
     
-    q = "SELECT email FROM partner WHERE email = ?"
-    pool.query(q, [email], (error, result) => {
-        if(error) {
-            console.log(error);
+    const q = "SELECT email FROM user WHERE email = ?;"+
+            "SELECT username FROM user WHERE username =?;"
+    pool.query(q, [email,username], (error, result) => {
+        if(result[0].length > 0) {
+            return res.send({message: "The email is in use"});
         }
-
-        if(result.length > 0) {
-            return res.render('register', {
-                message: 'Az email foglalt'
-            })
-        } /*else if (password !== passConfirm) {
-            return res.render('register', {
-                message: 'A jelszavak nem azonosak.'
-            })
+        if(result[1].length > 0) {
+            return res.send({message: "The username is in use"})
         }
-*/
+        
         let hashPass =  bcrypt.hashSync(password, 10);
         console.log(hashPass);
         
-        
         placeholders = [username,email,hashPass]
-        q2 = "INSERT INTO user (username, email, pass) VALUES (?);"
-        pool.query(q2, [placeholders], (error, result) => {
+        q3 = "INSERT INTO user (username, email, pass) VALUES (?);"
+        pool.query(q3, [placeholders], (error, result) => {
             if(!error){
-                res.send({message: "Success"});
+               return res.send({message: "Success"});
             } else {
-                res.send({message: "Failure"})
+               return res.send({message: "Failure"})
 
             }
-        })
-
-        
+        })  
     })
-    
+})
+
+app.post("/login",(req, res) => {
+    const { username, password } = req.body;
+    const q = "SELECT * FROM user WHERE username = ?";
+    pool.query(q, [username],
+        function (error, result) {
+            if (error)
+                return res.send({message:"Database error"});
+            else if (result.length == 0) {
+                return res.send({message: "Incorrect username or password"})
+            } else {
+                user = JSON.parse(JSON.stringify(result[0]));
+                if (!bcrypt.compareSync(password, user.pass))
+                    return res.send({message: "Incorrect username or password"})
+                const token = jwt.sign(user, process.env.TOKEN_SECRET)
+                res.json({ token: token, message: "Success" })
+                
+            }
+        }
+    )
 })
 
 app.patch("/changepass", (req, res) => { 
@@ -115,25 +92,7 @@ app.patch("/changepass", (req, res) => {
 
 })
 
-app.post("/login", function (req, res) {
-    const { username, pass } = req.body;
-    const q = "SELECT * FROM user WHERE username = ?";
-    pool.query(q, [username],
-        function (error, result) {
-            if (error)
-                res.status(500).send({ message: "Adatbázis hiba!" });
-            else if (result.length == 0) {
-                res.status(400).send({ message: "Nincs ilyen nevű felhasználó!" })
-            } else {
-                user = JSON.parse(JSON.stringify(result[0]));
-                if (!bcrypt.compareSync(pass, user.pass))
-                    return res.status(401).send({ message: "Hibás jelszó!" })
-                const token = jwt.sign(user, process.env.TOKEN_SECRET, { expiresIn: 3600 })
-                res.json({ token: token, message: "Sikeres bejelentkezés." })
-            }
-        }
-    )
-})
+
 
 app.post("/admin", (req, res) => {  //[WIP]
     const hashPass = process.env.ADMIN

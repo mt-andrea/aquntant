@@ -3,10 +3,15 @@ import NavbarLoged from './Navbar/NavbarLoged'
 import NavbarNotLoged from './Navbar/NavbarNotLoged'
 
 
-const Header = (props) => {
+
+
+
+const Header = () => {
+  
+let loged_in = sessionStorage.getItem('token')
 
   return (
-    props.loged ?
+    loged_in !== null ?
         <NavbarLoged />
       :
         <NavbarNotLoged />

@@ -12,8 +12,13 @@ import SignIn from './pages/Sign-in'
 import SignUp from './pages/Sign-up'
 import SuccessfullReg from './pages/Successfull-Reg'
 import Transactions from './pages/Transactions'
+import { useState } from 'react'
 
 const App = () => {
+  const [userData, setUserData] = useState({
+    name: "",
+    token: ""
+});
   return (
     <Router>
     <Header loged={false} />
@@ -26,7 +31,7 @@ const App = () => {
       <Route path='/about' element={<About/>} />
       <Route path='/contact' element={<Contact/>} />
       <Route path='/sign-up' element={<SignUp/>} />
-      <Route path='/sign-in' element={<SignIn/>} />
+      <Route path='/sign-in' element={<SignIn beallit={setUserData}/>} />
       <Route path='/successfull-reg' element={<SuccessfullReg/>} />
     </Routes>
     <Footer/>
