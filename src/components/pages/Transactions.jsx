@@ -27,7 +27,7 @@ const Transactions = () => {
   return (
     <div className='d-flex flex-column align-items-center' style={style.content}>
       <Filter/>
-      <table className='table table-striped table-hover'>{information && information.length>0 && information.map(
+      <table className='table table-striped table-hover m-2 w-75'>{information && information.length>0 && information.map(
         (item)=>
         <tr>
         <td>{item.date}</td>

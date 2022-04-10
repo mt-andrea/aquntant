@@ -20,8 +20,17 @@ const style = {
         width:'80%',
         border: 'solid 1px ' + colors.sotetkek,
         borderRadius:5,
-        height:50,
+        height:60,
         background:colors.feher
+    },
+    btnPlus:{
+        background: colors.sotetkek,
+        color: colors.vilagoskek,
+        border: 'solid 1px ' + colors.sotetkek,
+        borderRadius:'50%',
+        width:60,
+        fontWeight:'bolder',
+        fontSize:30
     }
 }
 export default style

@@ -15,8 +15,8 @@ const NavbarLoged = () => {
                 </NavLink>
             </NavMenu>
             <NavBtn >
-                <NavBtnLink to='/order' >
-                    Order { /*page for ordering from partners*/}
+                <NavBtnLink to='/settings' >
+                    Settings { /*page for modifying email, pass etc.*/}
                 </NavBtnLink>
             </NavBtn>
         </Nav>
