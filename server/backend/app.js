@@ -104,7 +104,7 @@ app.post("/admin", (req, res) => {  //[WIP]
 
 //listing routes
 app.get("/listing", authenticateToken, (req, res)=> {
-    const q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name AS type_name, movement.amount, "+
+    const q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, type.name AS type_name, movement.amount, "+
         "partner.name AS name, partner.address, user.username ,movement.comment FROM movement "+ 
         "INNER JOIN type ON type.id=movement.typeid "+
         "INNER JOIN partner ON partner.id=movement.partnerid "+
@@ -125,7 +125,7 @@ app.post("/listing/filtered", authenticateToken,(req,res) => {
     let ph =[]
     let q ="";
     if(in_out == "0" && month =="0") {
-        q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name AS type_name, movement.amount, "+
+        q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, type.name AS type_name, movement.amount, "+
         "partner.name AS name, partner.address, user.username ,movement.comment FROM movement "+ 
         "INNER JOIN type ON type.id=movement.typeid "+
         "INNER JOIN partner ON partner.id=movement.partnerid "+
@@ -134,7 +134,7 @@ app.post("/listing/filtered", authenticateToken,(req,res) => {
         ph=[req.user.username]
     }
     if(in_out == "+" && month != "0") {
-        q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name, movement.amount, "+
+        q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, type.name, movement.amount, "+
         "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
         "INNER JOIN type ON type.id=movement.typeid "+
         "INNER JOIN partner ON partner.id=movement.partnerid "+
@@ -142,7 +142,7 @@ app.post("/listing/filtered", authenticateToken,(req,res) => {
         "WHERE movement.amount>0 AND MONTH(movement.date)=? AND user.username=?;";
         ph = [month, req.user.username]
     } if(in_out == "+" && month == "0") {
-        q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name, movement.amount, "+
+        q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, type.name, movement.amount, "+
         "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
         "INNER JOIN type ON type.id=movement.typeid "+
         "INNER JOIN partner ON partner.id=movement.partnerid "+
@@ -151,7 +151,7 @@ app.post("/listing/filtered", authenticateToken,(req,res) => {
         ph=[req.user.username]
     }
      if(in_out == "-" && month != "0") {
-        q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name, movement.amount, "+
+        q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, type.name, movement.amount, "+
         "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
         "INNER JOIN type ON type.id=movement.typeid "+
         "INNER JOIN partner ON partner.id=movement.partnerid "+
@@ -159,7 +159,7 @@ app.post("/listing/filtered", authenticateToken,(req,res) => {
         "WHERE movement.amount<0 AND MONTH(movement.date)=? AND user.username=?;";
         ph=[month, req.user.username]
     } if(in_out == "-" && month =="0") {
-        q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name, movement.amount, "+
+        q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, type.name, movement.amount, "+
         "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
         "INNER JOIN type ON type.id=movement.typeid "+
         "INNER JOIN partner ON partner.id=movement.partnerid "+
@@ -168,7 +168,7 @@ app.post("/listing/filtered", authenticateToken,(req,res) => {
         ph=[req.user.username]
     } 
      if(in_out == "0" && month !="0") {
-        q = "SELECT DATE_FORMAT(movement.date, '%Y %M %D') as date, type.name, movement.amount, "+
+        q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, type.name, movement.amount, "+
         "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
         "INNER JOIN type ON type.id=movement.typeid "+
         "INNER JOIN partner ON partner.id=movement.partnerid "+
