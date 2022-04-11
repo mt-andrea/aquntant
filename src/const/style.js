@@ -6,7 +6,8 @@ const style = {
     },
     btnPrim: {
         background: colors.sotetkek,
-        color: colors.vilagoskek
+        color: colors.vilagoskek,
+        fontWeight:'bolder'
     },
     btnSec: {
         color: colors.sotetkek,
