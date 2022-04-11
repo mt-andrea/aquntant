@@ -9,6 +9,8 @@ const Transactions = () => {
   const url2 ='http://localhost:4000/listing/filtered'
   const token = 'Bearer: '+sessionStorage.token
 
+
+  
   const [data, setData] = useState({
     in_out: "0",
     month: "0"
@@ -38,8 +40,13 @@ function change(e) {
     console.log(information)
   }, []);
 
-  function filtering(e) {
-    e.preventDefault()
+  useEffect(() => { //I don't know why, but this one solved the "no button" problem
+    
+    filtering() 
+  },[data.in_out, data.month])
+
+  function filtering() {
+    //e.preventDefault()
     fetch(url2, {
       method: 'POST',
       headers: {
@@ -57,9 +64,15 @@ function change(e) {
     .catch(err => console.log(err))
   }
 
+  function doubletrouble(e) {
+    change(e)
+    filtering(e)
+    
+  }
+
   return (
     <div className='d-flex flex-column align-items-center' style={style.content}>
-      <Filter change={change} filtering={filtering} data={data}/>
+      <Filter change={change} filtering={filtering} data={data} doubletrouble={doubletrouble}/>
       <table className='table table-striped table-hover m-2 w-75'>
       <thead>
         <tr>

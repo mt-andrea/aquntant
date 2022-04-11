@@ -75,32 +75,43 @@ app.post("/login",(req, res) => {
     )
 })
 
-app.patch("/changepass", (req, res) => { 
-    const username = req.body.username;
-    const pass = req.body.pass;
+app.patch("/change/pass", authenticateToken ,(req, res) => { 
+    const {oldpassword,newpassword} = req.body;
+    const q = "UPDATE user SET pass=? WHERE username=?";
+    let newHashPass =  bcrypt.hashSync(newpassword, saltRounds);
+    
 
-    let hashPass =  bcrypt.hashSync(pass, saltRounds);
-    console.log(hashPass);
+    if(bcrypt.compareSync(oldpassword, req.user.pass)) {
+        pool.query(q,[newHashPass, req.user.username], (error, result) =>{
+            if(!error) {
+                res.send(result)
+            } else {
+                res.send(error)
+            }
+        })
+    } else {
+        console.log("Error") //PH message
+    }
+})
 
-    pool.query("UPDATE user SET pass=? WHERE username=?", [hashPass, username], (error, result) => {
-        if(!error) {
-            res.send(result);
-        } else {
-            res.send(error);
-        }
-    })
+app.patch("/change/email", authenticateToken, (req, res) => {
+    const {oldemail,newemail,password} = req.body
+    const q = "UPDATE user SET email=? WHERE username=?;"
+    
+    if(bcrypt.compareSync(password, req.user.pass) && (oldemail==req.user.email)) {
+        pool.query(q,[newemail, req.user.username], (error, result) => {
+            if(!error) {
+                res.send(result)
+            } else {
+                res.send(error)
+            }
+        })
+    } else {
+        console.log("Error")
+    }
 
 })
 
-
-
-app.post("/admin", (req, res) => {  //[WIP]
-    const hashPass = process.env.ADMIN
-    if (!bcrypt.compareSync(req.body.pass, hashPass))
-        return res.status(401).send({ message: "Hibás jelszó!"})
-    const token = jwt.sign({ pass: req.body.pass} , process.env.TOKEN_SECRET, {expiresIn:3600})
-    res.json({ token: token, message: "Sikeres bejelentkezés."})
-})
 
 //listing routes
 app.get("/listing", authenticateToken, (req, res)=> {
@@ -379,6 +390,7 @@ function authenticateToken(req, res, next) {
             return res.status(403).send({ message: "Nincs jogosultsága!" })
         req.user = user
         next()
+        //console.log(user)
     })
 }
 

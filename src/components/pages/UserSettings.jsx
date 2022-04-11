@@ -1,7 +1,66 @@
-import React from 'react'
+import React, {useState} from 'react'
+import { useNavigate } from 'react-router-dom';
 import style from '../../const/style'
 
 const UserSettings = () => {
+  let navigate = useNavigate();
+  const token ="Bearer: "+sessionStorage.token
+  const [message, setMessage] = useState("")
+
+  const [data, setData] = useState({
+      oldpassword: "",
+      newpassword: "",
+      retype: "",
+      oldemail: "",
+      newemail: "",
+      password:""
+  })
+
+  function change(e) {
+    const { name, value } = e.target
+    setData({
+        ...data,
+        [name]: value
+    })
+}
+
+    function save1(e) {
+      e.preventDefault()
+      
+      fetch('http://localhost:4000/change/pass', {
+          method: 'PATCH',
+          headers: {
+              'Authorization': token,
+              'Content-type': 'application/json;charset=utf-8'
+          },
+          body: JSON.stringify({
+              "oldpassword": data.oldpassword,
+              "newpassword": data.newpassword,
+              "retype": data.retype
+              
+          })
+      })
+          .then((response) => response.json())
+          .catch(err => console.log(err))
+  }
+  function save2(e) {
+    e.preventDefault()
+    
+    fetch('http://localhost:4000/change/email', {
+        method: 'PATCH',
+        headers: {
+            'Authorization': token,
+            'Content-type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify({
+            "oldemail": data.oldemail,
+            "newemail": data.newemail,
+            "password": data.password
+        })
+    })
+        .then((response) => response.json())
+        .catch(err => console.log(err))
+}
   return (
     <div style={style.content}>
     <form>
@@ -17,11 +76,11 @@ const UserSettings = () => {
     </div>
     <div className='d-flex flex-md-row justify-content-evenly m-2'> 
     <label className='d-flex flex-column align-items-end w-25' htmlFor="retype">Retype New Password: </label>
-    <input className='d-flex flex-column form-control w-50' type="password" name="retype" id="retype" value={data.repassword} onChange={change} />
+    <input className='d-flex flex-column form-control w-50' type="password" name="retype" id="retype" value={data.retype} onChange={change} />
     </div>
     </fieldset>
     <div className='d-flex flex-row justify-content-around'>
-      <button className='form-control btn m-3' style={style.btnPrim} onClick={save} type="submit">Save</button> 
+      <button className='form-control btn m-3' style={style.btnPrim} onClick={save1} type="submit">Save</button> 
       <button className='form-control btn m-3' style={style.btnSec} type="reset">Reset</button>
       </div>
     </form>
@@ -42,7 +101,7 @@ const UserSettings = () => {
           </div>
           </fieldset>
           <div className='d-flex flex-row justify-content-around'>
-      <button className='form-control btn m-3' style={style.btnPrim} onClick={save} type="submit">Save</button> 
+      <button className='form-control btn m-3' style={style.btnPrim} onClick={save2} type="submit">Save</button> 
       <button className='form-control btn m-3' style={style.btnSec} type="reset">Reset</button>
       </div>
     </form>
