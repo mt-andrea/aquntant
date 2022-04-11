@@ -60,14 +60,24 @@ function change(e) {
   return (
     <div className='d-flex flex-column align-items-center' style={style.content}>
       <Filter change={change} filtering={filtering} data={data}/>
-      <table className='table table-striped table-hover m-2 w-75'>{information && information.length>0 && information.map(
+      <table className='table table-striped table-hover m-2 w-75'>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Partner</th>
+          <th>Comment</th>
+        </tr>
+      </thead>
+      {information && information.length>0 && information.map(
         (item)=>
         <tr>
-        <td>{item.name}</td>
         <td>{item.date}</td>
         <td>{item.amount}</td>
+        <td>{item.name}</td>
         <td>{item.comment}</td>
-        </tr>)}</table>
+        </tr>)}
+        </table>
     </div>
   )
 }
