@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import style from '../../const/style'
+import {style} from '../../const/style'
 import Filter from '../sub/Filter'
 
 const Transactions = () => {

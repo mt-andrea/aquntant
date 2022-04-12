@@ -1,5 +1,5 @@
 import React from 'react'
-import style from '../../const/style'
+import {style} from '../../const/style'
 
 const Contact = () => {
   return (

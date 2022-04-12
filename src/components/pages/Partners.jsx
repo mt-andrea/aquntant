@@ -1,5 +1,5 @@
 import React from 'react'
-import style from '../../const/style'
+import {style} from '../../const/style'
 import NewPartner from '../sub/New-partner'
 
 const Partners = () => {

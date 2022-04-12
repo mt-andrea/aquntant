@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import style from '../../const/style'
+import {style} from '../../const/style'
 import { useNavigate } from 'react-router-dom';
 import { ExclamationCircleFill } from 'react-bootstrap-icons'
 

@@ -1,4 +1,20 @@
 import colors from './colors'
+import React, {useEffect, useState} from 'react'
+
+const useMediaQuery = (query) => {
+    const mediaMatch = window.matchMedia(query);
+    const [matches, setMatches] = useState(mediaMatch.matches);
+  
+    useEffect(() => {
+      const handler = e => setMatches(e.matches);
+      mediaMatch.addEventListener(handler);
+      return () => mediaMatch.removeEventListener(handler);
+    });
+    return matches;
+  };
+
+  
+
 const style = {
     content: {
         background: colors.vilagoskek,
@@ -32,6 +48,9 @@ const style = {
         width:60,
         fontWeight:'bolder',
         fontSize:30
+    },
+    resp:{
+
     }
 }
-export default style
+export {style, useMediaQuery}

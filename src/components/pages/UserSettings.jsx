@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
-import style from '../../const/style'
+import {style, useMediaQuery} from '../../const/style'
 
 const UserSettings = () => {
   let navigate = useNavigate();
@@ -61,50 +61,52 @@ const UserSettings = () => {
         .then((response) => response.json())
         .catch(err => console.log(err))
 }
+//const media=useMediaQuery('(min-width: 500px)')
   return (
     <div style={style.content}>
     <form>
-    <fieldset className='m-3' style={{width: '50vw'}}>
+    <fieldset className='' style={{width:'75vw'}}>
     <legend className='text-center'>Password modification</legend>
-    <div className='d-flex flex-md-row justify-content-evenly m-2'> 
-          <label className='d-flex flex-column align-items-end w-25' htmlFor="oldpassword">Old Password: </label>
+    <div className='d-flex flex-row justify-content-evenly m-2'> 
+          <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor="oldpassword">Old Password: </label>
           <input className='d-flex flex-column form-control w-50' type="password" name="oldpassword" id="oldpassword" value={data.oldpassword} onChange={change} />
           </div>
     <div className='d-flex flex-md-row justify-content-evenly m-2'> 
-    <label className='d-flex flex-column align-items-end w-25' htmlFor="newpassword">New password: </label>
+    <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor="newpassword">New password: </label>
     <input className='d-flex flex-column form-control w-50' type="password" name="newpassword" id="newpassword" value={data.newpassword} onChange={change} />
     </div>
     <div className='d-flex flex-md-row justify-content-evenly m-2'> 
-    <label className='d-flex flex-column align-items-end w-25' htmlFor="retype">Retype New Password: </label>
+    <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor="retype">Retype New Password: </label>
     <input className='d-flex flex-column form-control w-50' type="password" name="retype" id="retype" value={data.retype} onChange={change} />
     </div>
     </fieldset>
-    <div className='d-flex flex-row justify-content-around'>
-      <button className='form-control btn m-3' style={style.btnPrim} onClick={save1} type="submit">Save</button> 
-      <button className='form-control btn m-3' style={style.btnSec} type="reset">Reset</button>
+    <div className='d-flex flex-row justify-content-around m-auto w-50'>
+      <button className='form-control btn m-3 w-25' style={style.btnPrim} onClick={save1} type="submit">Save</button> 
+      <button className='form-control btn m-3 w-25' style={style.btnSec} type="reset">Reset</button>
       </div>
     </form>
     <form>
-    <fieldset className='m-3' style={{width: '50vw'}}>
+    <fieldset className='m-3' style={{width: '75vw'}}>
       <legend className='text-center'>E-mail modification</legend>
       <div className='d-flex flex-md-row justify-content-evenly m-2'> 
-          <label className='d-flex flex-column align-items-end w-25' htmlFor="oldemail">Old E-mail: </label>
+          <label className='d-flex flex-column align-items-end  w-50 p-2' htmlFor="oldemail">Old E-mail: </label>
           <input className='d-flex flex-column form-control w-50' type="email" name="oldemail" id="oldemail" value={data.oldemail} onChange={change} />
           </div>
           <div className='d-flex flex-md-row justify-content-evenly m-2'> 
-          <label className='d-flex flex-column align-items-end w-25' htmlFor="newemail">New E-mail: </label>
+          <label className='d-flex flex-column align-items-end  w-50 p-2' htmlFor="newemail">New E-mail: </label>
           <input className='d-flex flex-column form-control w-50' type="email" name="newemail" id="newemail" value={data.newemail} onChange={change} />
           </div>
           <div className='d-flex flex-md-row justify-content-evenly m-2'> 
-          <label className='d-flex flex-column align-items-end w-25' htmlFor="password">Password: </label>
+          <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor="password">Password: </label>
           <input className='d-flex flex-column form-control w-50' type="password" name="password" id="password" value={data.password} onChange={change} />
           </div>
           </fieldset>
-          <div className='d-flex flex-row justify-content-around'>
-      <button className='form-control btn m-3' style={style.btnPrim} onClick={save2} type="submit">Save</button> 
-      <button className='form-control btn m-3' style={style.btnSec} type="reset">Reset</button>
+          <div className='d-flex flex-row justify-content-around m-auto w-50'>
+      <button className='form-control btn m-3 w-25' style={style.btnPrim} onClick={save2} type="submit">Save</button> 
+      <button className='form-control btn m-3 w-25' style={style.btnSec} type="reset">Reset</button>
       </div>
     </form>
+    <button className='form-control btn btn-outline-danger' style={{fontWeight:'bolder'}}>Log out</button>
     </div>
   )
 }
