@@ -41,7 +41,7 @@ const Filter = (props) => {
 
                         </select>
                     </div>
-                    <button className='form-control w-auto btn mx-2' style={style.btnPrim} onClick={props.filtering}>Filter</button>
+                    
                 </fieldset>
             </form>
         </div>
