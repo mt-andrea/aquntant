@@ -47,7 +47,7 @@ const SignIn = (props) => {
             
             if (json.message == "Success") {
               sessionStorage.token = json.token
-              props.beallit({ name:data.name, token:json.token}) //currently soft refresh for navbar
+              props.beallit({token:json.token}) //currently soft refresh for navbar
               navigate("/transactions")
             } else {
               setMessage(json.message)

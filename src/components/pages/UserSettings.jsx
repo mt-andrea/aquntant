@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import {style, useMediaQuery} from '../../const/style'
 
-const UserSettings = () => {
+const UserSettings = (props) => {
   let navigate = useNavigate();
   const token ="Bearer: "+sessionStorage.token
   const [message, setMessage] = useState("")
@@ -41,6 +41,11 @@ const UserSettings = () => {
           })
       })
           .then((response) => response.json())
+          .then(json => {
+            if(json.message ="Succes") {
+              logout()
+            }
+          })
           .catch(err => console.log(err))
   }
   function save2(e) {
@@ -59,8 +64,20 @@ const UserSettings = () => {
         })
     })
         .then((response) => response.json())
+        .then(json => {
+          if(json.message ="Succes") {
+            logout()
+          }
+        })
         .catch(err => console.log(err))
 }
+
+function logout() {
+  sessionStorage.removeItem('token')
+  props.beallit({token: ""})
+  navigate("/")
+}
+
 //const media=useMediaQuery('(min-width: 500px)')
   return (
     <div style={style.content}>
@@ -106,7 +123,7 @@ const UserSettings = () => {
       <button className='form-control btn m-3 w-25' style={style.btnSec} type="reset">Reset</button>
       </div>
     </form>
-    <button className='form-control btn btn-outline-danger' style={{fontWeight:'bolder'}}>Log out</button>
+    <button className='form-control btn btn-outline-danger' style={{fontWeight:'bolder'}} onClick={logout}>Log out</button>
     </div>
   )
 }
