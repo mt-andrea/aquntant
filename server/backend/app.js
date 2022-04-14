@@ -254,6 +254,16 @@ app.post("/choices/partner", authenticateToken,(req,res)=> {
         }
     })
 })
+app.post("/choices/tax",(req,res)=> {
+    const q ="SELECT name,percent FROM tax;"
+    pool.query(q, (error, result) => {
+        if(!error) {
+            res.send(result)
+        } else {
+            res.send(error)
+        }
+    })
+})
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']

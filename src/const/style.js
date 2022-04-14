@@ -1,19 +1,5 @@
 import colors from './colors'
-import React, {useEffect, useState} from 'react'
 
-const useMediaQuery = (query) => {
-    const mediaMatch = window.matchMedia(query);
-    const [matches, setMatches] = useState(mediaMatch.matches);
-  
-    useEffect(() => {
-      const handler = e => setMatches(e.matches);
-      mediaMatch.addEventListener(handler);
-      return () => mediaMatch.removeEventListener(handler);
-    });
-    return matches;
-  };
-
-  
 
 const style = {
     content: {
@@ -34,10 +20,8 @@ const style = {
         fontWeight: "bolder"
     },
     strip_form:{
-        width:'80%',
         border: 'solid 1px ' + colors.sotetkek,
         borderRadius:5,
-        height:60,
         background:colors.feher
     },
     btnPlus:{
@@ -46,11 +30,9 @@ const style = {
         border: 'solid 1px ' + colors.sotetkek,
         borderRadius:'50%',
         width:60,
+        height:60,
         fontWeight:'bolder',
         fontSize:30
-    },
-    resp:{
-
     }
 }
-export {style, useMediaQuery}
+export {style}

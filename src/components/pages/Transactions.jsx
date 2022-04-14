@@ -68,9 +68,9 @@ function change(e) {
   
 
   return (
-    <div className='d-flex flex-column align-items-center' style={style.content}>
+    <div className='d-flex flex-sm-row flex-lg-column align-items-center' style={style.content}>
       <Filter change={change} filtering={filtering} data={data} />
-      <table className='table table-striped table-hover m-2 w-75'>
+      <table className='table table-striped table-hover m-2 w-50'>
       <thead>
         <tr>
           <th>Date</th>

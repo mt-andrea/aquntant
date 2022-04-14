@@ -28,19 +28,19 @@ const Filter = (props) => {
       }
    
     return (
-        <div style={style.strip_form}>
+        <div className=' w-50 h-auto' style={style.strip_form}>
             <form>
-                <fieldset className='d-flex flex-md-row justify-content-evenly m-2'>
-                    <div className='d-flex flex-row align-items-center w-25'>
-                        <label className='m-2' htmlFor='in_out'>Income/Outcome </label>
+                <fieldset className='d-flex flex-lg-row flex-sm-column justify-content-evenly m-2'>
+                    <div className='d-flex flex-lg-row flex-sm-column m-2 align-items-center w-25'>
+                        <label  htmlFor='in_out'>In-/Outcome </label>
                         <select className='form-control p-1' id='in_out' name='in_out'  value={props.data.in_out} onChange={props.change} >
                             <option value={'0'}>-- Select --</option>
                             <option value={'-'}>Outcome</option>
                             <option value={'+'}>Income</option>
                         </select>
                     </div>
-                    <div className='d-flex flex-row align-items-center w-25'>
-                        <label className='m-2' htmlFor='month'>Month</label>
+                    <div className='d-flex flex-lg-row flex-sm-column m-2 align-items-center w-25'>
+                        <label  htmlFor='month'>Month</label>
                         <select className='form-control p-1' id='month' name='month'  value={props.data.month} onChange={props.change}>
                             <option value={'0'}>-- Select --</option>
                             <option value={'01'}>January</option>
@@ -57,8 +57,8 @@ const Filter = (props) => {
                             <option value={'12'}>December</option>
                         </select>
                     </div>
-                    <div className='d-flex flex-row align-items-center w-25'>
-                        <label className='m-2' htmlFor='partner'>Partner</label>
+                    <div className='d-flex flex-lg-row flex-sm-column m-2 align-items-center w-25'>
+                        <label  htmlFor='partner'>Partner</label>
                         <select className='form-control p-1' id='partner' name='partner' value={props.data.partner} onChange={props.change}>
                             <option value={'0'} selected>-- Select --</option>
                             {partners && partners.length>0 && partners.map(

@@ -6,9 +6,7 @@ const Partners = () => {
   const token = 'Bearer: '+sessionStorage.token
     const url3 = 'http://localhost:4000/choices/partner'
 
-    const [partners, setPartners] = useState({
-        partner: ""
-    })
+    const [partners, setPartners] = useState({})
 
     useEffect(() => {
         partners_list();
@@ -28,7 +26,7 @@ const Partners = () => {
         .catch(err => console.log(err))
       }
   return (
-    <div className='d-flex flex-column align-items-center' style={style.content}>
+    <div className='d-flex flex-md-row flex-lg-column align-items-center' style={style.content}>
       <NewPartner updateList={partners_list} />
       <table className='table table-striped table-hover m-2 w-75'>
         <thead>

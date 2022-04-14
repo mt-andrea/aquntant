@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {style} from '../../const/style'
 import { useNavigate } from 'react-router-dom';
-import {ExclamationCircleFill} from 'react-bootstrap-icons'
+import Message from '../sub/Message';
 
 
 
@@ -62,18 +62,13 @@ export default function SignUp(props)  {
           })
           .catch(err => console.log(err))
   }
-  const Message = () => {
-    let feltetel=message!=""
-    return (
-      <p>{feltetel && <ExclamationCircleFill/>} {message}</p> 
-    )
-  }
+
   return (
     <div className='d-flex justify-content-center' style={style.content} >
         <form>
       <fieldset className='m-3' style={{width: '50vw'}}>
         <legend className='text-center'>Sign Up</legend>
-        <p className='text-center' style={style.message}>{<Message/>}</p>
+        <p className='text-center' style={style.message}>{<Message message={message}/>}</p>
           <div className='d-flex flex-md-row justify-content-evenly m-2'>
           <label className='d-flex flex-column align-items-end w-25' htmlFor="username">Username: </label>
           <input className='d-flex flex-column form-control w-50' type="text" name="username" id="username" value={data.username} onChange={change} />

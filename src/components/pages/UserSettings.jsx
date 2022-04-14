@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import {style, useMediaQuery} from '../../const/style'
+import Message from '../sub/Message';
 
 const UserSettings = (props) => {
   let navigate = useNavigate();
@@ -83,6 +84,7 @@ function logout() {
     <div style={style.content}>
     <form>
     <fieldset className='' style={{width:'75vw'}}>
+    {<Message style={style.message} message={message}/>}
     <legend className='text-center'>Password modification</legend>
     <div className='d-flex flex-row justify-content-evenly m-2'> 
           <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor="oldpassword">Old Password: </label>

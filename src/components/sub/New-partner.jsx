@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {style} from '../../const/style'
+import Message from './Message'
 
 
 const NewPartner = (props) => {
@@ -46,10 +47,11 @@ function change(e) {
       .catch(err => console.log(err))
   }
   return (
-    <div style={style.strip_form}>
+    <div className='w-75 p-2' style={style.strip_form}>
       <form>
-        <fieldset className='d-flex flex-row justify-content-between'>
+        <fieldset className='d-flex flex-lg-row flex-md-column justify-content-between'>
         <h3>Partner data: </h3>
+        {<Message style={style.message} message={message}/>}
         <div className='d-flex flex-column'>
             <label htmlFor='name'>Name </label>
             <input className='form-control form-control-sm' id='name' name='name' type={'text'} value={data.name} onChange={change}/>
