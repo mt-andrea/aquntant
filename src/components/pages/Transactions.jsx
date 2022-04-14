@@ -76,17 +76,20 @@ function change(e) {
           <th>Date</th>
           <th>Amount</th>
           <th>Partner</th>
+          <th>Tax</th>
           <th>Comment</th>
         </tr>
       </thead>
+      <tbody>
       {information && information.length>0 && information.map(
         (item)=>
         <tr>
         <td>{item.date}</td>
         <td>{item.amount}</td>
         <td>{item.name}</td>
+        <td>{item.tax}</td>
         <td>{item.comment}</td>
-        </tr>)}
+        </tr>)}</tbody>
         </table>
     </div>
   )

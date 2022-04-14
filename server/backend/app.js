@@ -132,9 +132,10 @@ app.get("/listing", authenticateToken, (req, res)=> {
 
 app.get("/listing", authenticateToken, (req, res)=> {
     const q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
-        "partner.name AS name, partner.address, user.username ,movement.comment FROM movement "+ 
+        "partner.name AS name, partner.address, user.username ,movement.comment,tax.name as tax FROM movement "+ 
         "INNER JOIN partner ON partner.id=movement.partnerid "+
         "INNER JOIN user ON user.id=partner.userid "+
+        "INNER JOIN tax ON tax.id=movement.taxid "+
         "WHERE user.username=?;";        
     pool.query(q,[req.user.username], (error, results) => {
         if (!error) {
@@ -150,9 +151,10 @@ app.post("/listing/filtered", authenticateToken,(req,res) => {
     let {in_out,month,partner} = req.body;
     let ph =[req.user.username]
     let q ="SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
-    "partner.name AS name, partner.address, user.username ,movement.comment FROM movement "+ 
+    "partner.name AS name, partner.address, user.username ,movement.comment,tax.name as tax FROM movement "+ 
     "INNER JOIN partner ON partner.id=movement.partnerid "+
     "INNER JOIN user ON user.id=partner.userid "+
+    "INNER JOIN tax ON tax.id=movement.taxid "+
     "WHERE user.username=? ";
     if(in_out =="-" && month!="0" && partner!="0") {
         q +="AND movement.amount<0 AND MONTH(movement.date)=? AND partner.name=?"
@@ -243,7 +245,7 @@ app.post("/add/partner", authenticateToken,(req,res) => {
 
 app.post("/choices/partner", authenticateToken,(req,res)=> {
     const userid =req.user.id
-    const q ="SELECT name FROM partner WHERE userid=?;"
+    const q ="SELECT name,email,concat(country,' ',postal_code,' ',address) as address FROM partner WHERE userid=?;"
     pool.query(q, [userid], (error, result) => {
         if(!error) {
             res.send(result)
