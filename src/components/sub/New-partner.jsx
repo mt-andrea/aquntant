@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {style} from '../../const/style'
 
 
-const NewPartner = () => {
+const NewPartner = (props) => {
   const token ="Bearer: "+sessionStorage.token
   const [data, setData] = useState({
     name: "",
@@ -42,7 +42,7 @@ function change(e) {
       })
   })
       .then((response) => response.json())
-      
+      .then(props.updateList)
       .catch(err => console.log(err))
   }
   return (
