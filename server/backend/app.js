@@ -130,56 +130,76 @@ app.get("/listing", authenticateToken, (req, res)=> {
 })
 
 
-app.post("/listing/filtered", authenticateToken,(req,res) => {
-    let {in_out,month} = req.body;
-    let ph =[]
-    let q ="";
-    if(in_out == "0" && month =="0") {
-        q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
+app.get("/listing", authenticateToken, (req, res)=> {
+    const q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
         "partner.name AS name, partner.address, user.username ,movement.comment FROM movement "+ 
         "INNER JOIN partner ON partner.id=movement.partnerid "+
         "INNER JOIN user ON user.id=partner.userid "+
-        "WHERE user.username=?;"; 
-        ph=[req.user.username]
+        "WHERE user.username=?;";        
+    pool.query(q,[req.user.username], (error, results) => {
+        if (!error) {
+            res.send(results);
+        } else {
+            res.send(error);
+        }
+    })
+})
+
+
+app.post("/listing/filtered", authenticateToken,(req,res) => {
+    let {in_out,month,partner} = req.body;
+    let ph =[req.user.username]
+    let q ="SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
+    "partner.name AS name, partner.address, user.username ,movement.comment FROM movement "+ 
+    "INNER JOIN partner ON partner.id=movement.partnerid "+
+    "INNER JOIN user ON user.id=partner.userid "+
+    "WHERE user.username=? ";
+    if(in_out =="-" && month!="0" && partner!="0") {
+        q +="AND movement.amount<0 AND MONTH(movement.date)=? AND partner.name=?"
+        ph.push(month,partner)
     }
-    if(in_out == "+" && month != "0") {
-        q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
-        "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
-        "INNER JOIN partner ON partner.id=movement.partnerid "+
-        "INNER JOIN user ON user.id=partner.userid "+
-        "WHERE movement.amount>0 AND MONTH(movement.date)=? AND user.username=?;";
-        ph = [month, req.user.username]
-    } if(in_out == "+" && month == "0") {
-        q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
-        "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
-        "INNER JOIN partner ON partner.id=movement.partnerid "+
-        "INNER JOIN user ON user.id=partner.userid "+
-        "WHERE movement.amount>0 AND user.username=?;";
-        ph=[req.user.username]
+    if(in_out =="-" && month=="0" && partner!="0") {
+        q +="AND movement.amount<0 AND partner.name=?"
+        ph.push(partner)
     }
-     if(in_out == "-" && month != "0") {
-        q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
-        "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
-        "INNER JOIN partner ON partner.id=movement.partnerid "+
-        "INNER JOIN user ON user.id=partner.userid "+
-        "WHERE movement.amount<0 AND MONTH(movement.date)=? AND user.username=?;";
-        ph=[month, req.user.username]
-    } if(in_out == "-" && month =="0") {
-        q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
-        "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
-        "INNER JOIN partner ON partner.id=movement.partnerid "+
-        "INNER JOIN user ON user.id=partner.userid "+
-        "WHERE movement.amount<0 AND user.username=?;";
-        ph=[req.user.username]
-    } 
-     if(in_out == "0" && month !="0") {
-        q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
-        "partner.name, partner.address, user.username ,movement.comment FROM movement "+ 
-        "INNER JOIN partner ON partner.id=movement.partnerid "+
-        "INNER JOIN user ON user.id=partner.userid "+
-        "WHERE MONTH(movement.date)=? AND user.username=?;";
-        ph=[month, req.user.username]
-    } 
+    if(in_out =="-" && month!="0" && partner=="0") {
+        q +="AND movement.amount<0 AND MONTH(movement.date)=?"
+        ph.push(month)
+    }
+    if(in_out =="-" && month=="0" && partner=="0") {
+        q +="AND movement.amount<0"
+    }
+    if(in_out =="+" && month!="0" && partner!="0") {
+        q +="AND movement.amount>0 AND MONTH(movement.date)=? AND partner.name=?"
+        ph.push(month,partner)
+    }
+    if(in_out =="+" && month=="0" && partner!="0") {
+        q +="AND movement.amount>0 AND partner.name=?"
+        ph.push(partner)
+    }
+    if(in_out =="+" && month!="0" && partner=="0") {
+        q +="AND movement.amount>0 AND MONTH(movement.date)=?"
+        ph.push(month,partner)
+    }
+    if(in_out =="+" && month=="0" && partner=="0") {
+        q +="AND movement.amount>0"
+    }
+    if(in_out =="0" && month!="0" && partner!="0") {
+        q +="AND MONTH(movement.date)=? AND partner.name=?"
+        ph.push(month,partner)
+    }
+    if(in_out =="0" && month=="0" && partner!="0") {
+        q +="AND partner.name=?"
+        ph.push(partner)
+    }
+    if(in_out =="0" && month!="0" && partner=="0") {
+        q +="AND MONTH(movement.date)=?"
+        ph.push(month)
+    }
+    
+    
+   
+    
     pool.query(q, ph, (error, result)=> {
         if(!error) {
             res.send(result)
@@ -221,32 +241,17 @@ app.post("/add/partner", authenticateToken,(req,res) => {
 
 })
 
-
-
-
-
-app.post("/test/add/all", (req, res) =>{    //not working anymore, material for ideas
-    const {taxname,taxpercent,typename,partnername,username,email,country,postal,address,pass,date,amount,comment} = req.body;
-
-    const q = "INSERT INTO tax (name, percent) VALUES (?);"+
-              "INSERT INTO type (name, taxid) VALUES (?,(SELECT id FROM tax WHERE name = ?));"+
-              "INSERT INTO user (username, pass) VALUES (?);"+
-              "INSERT INTO partner (name, email, country, postal_code, address, userid) VALUES (?,(SELECT id FROM user WHERE username = ?));"+
-              "INSERT INTO movement (date,amount,typeid,partnerid,comment) VALUES "
-              +"(?,(SELECT id FROM type WHERE name = ?),(SELECT id FROM user WHERE username = ?),?);";
-              
-        let hashPass =  bcrypt.hashSync(pass, saltRounds);
-        
-        placeholders = [[taxname, taxpercent],typename, taxname, [username, hashPass],[partnername,email,country,postal,address],username,[date, amount], typename, username, comment];
-    pool.query(q, placeholders, (error, results) => {
-        if (!error) {
-            res.send(results);
+app.post("/choices/partner", authenticateToken,(req,res)=> {
+    const userid =req.user.id
+    const q ="SELECT name FROM partner WHERE userid=?;"
+    pool.query(q, [userid], (error, result) => {
+        if(!error) {
+            res.send(result)
         } else {
-            res.send(error);
+            res.send(error)
         }
     })
 })
-
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
