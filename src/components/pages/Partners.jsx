@@ -29,7 +29,7 @@ const Partners = () => {
       }
   return (
     <div className='d-flex flex-column align-items-center' style={style.content}>
-      <NewPartner />
+      <NewPartner updateList={partners_list} />
       <table className='table table-striped table-hover m-2 w-75'>
         <thead>
           <tr>
