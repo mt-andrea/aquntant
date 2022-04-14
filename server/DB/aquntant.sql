@@ -89,10 +89,14 @@ CREATE TABLE `tax` (
 --
 
 INSERT INTO `tax` (`id`, `name`, `percent`) VALUES
-(1, 'taxn1', 24),
-(2, 'taxn2', 20),
-(3, 'taxn3', 12),
-(4, 'taxn4', 52);
+(1,'altalanos',27),
+(2,'tej-/gabonatermek',18),
+(3,'gyogyszer/gyogyaszati segedeszkoz',5),
+(4,'konyv/ujsag',5),
+(5,'haziasitott allat es husa',5),
+(6,'tojas/hal',5),
+(7,'targyi adomentes',0),
+(8,'alanyi adomentes',0);
 
 -- --------------------------------------------------------
 
