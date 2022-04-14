@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 12, 2022 at 08:55 PM
+-- Generation Time: Mar 17, 2022 at 11:55 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `movement` (
   `id` int(5) NOT NULL,
   `date` date NOT NULL,
-  `taxid` int(3) NOT NULL,
+  `typeid` int(3) NOT NULL,
   `amount` int(7) NOT NULL,
   `partnerid` int(4) NOT NULL,
   `comment` text COLLATE utf8mb4_hungarian_ci DEFAULT NULL
@@ -40,7 +40,7 @@ CREATE TABLE `movement` (
 -- Dumping data for table `movement`
 --
 
-INSERT INTO `movement` (`id`, `date`, `taxid`, `amount`, `partnerid`, `comment`) VALUES
+INSERT INTO `movement` (`id`, `date`, `typeid`, `amount`, `partnerid`, `comment`) VALUES
 (1, '1999-02-03', 1, 20000, 1, 'Likes to test stuff.'),
 (2, '1985-12-13', 2, -20530, 2, 'Likes to fix stuff.'),
 (3, '1995-06-23', 3, -530, 3, 'Likes to unfix stuff.'),
@@ -97,6 +97,28 @@ INSERT INTO `tax` (`id`, `name`, `percent`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `type`
+--
+
+CREATE TABLE `type` (
+  `id` int(3) NOT NULL,
+  `name` varchar(20) COLLATE utf8mb4_hungarian_ci NOT NULL,
+  `taxid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+
+--
+-- Dumping data for table `type`
+--
+
+INSERT INTO `type` (`id`, `name`, `taxid`) VALUES
+(1, 'type1', 1),
+(2, 'type2', 2),
+(3, 'type3', 3),
+(4, 'type4', 4);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user`
 --
 
@@ -131,7 +153,7 @@ INSERT INTO `user` (`id`, `username`, `email`, `pass`) VALUES
 ALTER TABLE `movement`
   ADD PRIMARY KEY (`id`),
   ADD KEY `partnerid` (`partnerid`),
-  ADD KEY `taxid` (`taxid`) USING BTREE;
+  ADD KEY `typeid` (`typeid`);
 
 --
 -- Indexes for table `partner`
@@ -147,6 +169,14 @@ ALTER TABLE `partner`
 ALTER TABLE `tax`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `type`
+--
+ALTER TABLE `type`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `taxid` (`taxid`);
 
 --
 -- Indexes for table `user`
@@ -178,6 +208,12 @@ ALTER TABLE `tax`
   MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `type`
+--
+ALTER TABLE `type`
+  MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
@@ -191,7 +227,7 @@ ALTER TABLE `user`
 -- Constraints for table `movement`
 --
 ALTER TABLE `movement`
-  ADD CONSTRAINT `movement_ibfk_2` FOREIGN KEY (`taxid`) REFERENCES `tax` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `movement_ibfk_2` FOREIGN KEY (`typeid`) REFERENCES `type` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `movement_ibfk_3` FOREIGN KEY (`partnerid`) REFERENCES `partner` (`id`) ON UPDATE CASCADE;
 
 --
@@ -199,6 +235,12 @@ ALTER TABLE `movement`
 --
 ALTER TABLE `partner`
   ADD CONSTRAINT `partner_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `user` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `type`
+--
+ALTER TABLE `type`
+  ADD CONSTRAINT `type_ibfk_1` FOREIGN KEY (`taxid`) REFERENCES `tax` (`id`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

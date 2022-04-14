@@ -16,9 +16,10 @@ import { useState } from 'react'
 
 const App = () => {
   const [userData, setUserData] = useState({
-    name: "",
     token: ""
 });
+
+
   return (
     <Router>
     <Header />
@@ -26,7 +27,7 @@ const App = () => {
       <Route path='/transactions' exact element={<Transactions/>} />
       <Route path='/new' element={<New/>} />
       <Route path='/partners' element={<Partners/>} />
-      <Route path='/settings' element={<UserSettings/>} />
+      <Route path='/settings' element={<UserSettings beallit={setUserData}/>} />
       <Route path='/' exact element={<Home/>} />
       <Route path='/about' element={<About/>} />
       <Route path='/contact' element={<Contact/>} />

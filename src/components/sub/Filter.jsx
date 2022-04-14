@@ -1,8 +1,31 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {style} from '../../const/style'
 
 const Filter = (props) => {
-  
+    const token = 'Bearer: '+sessionStorage.token
+    const url3 = 'http://localhost:4000/choices/partner'
+
+    const [partners, setPartners] = useState({
+        partner: ""
+    })
+
+    useEffect(() => {
+        partners_list();
+      }, []);
+
+    function partners_list() {
+        //e.preventDefault()
+        fetch(url3, {
+          method: 'POST',
+          headers: {
+            'Authorization': token,
+            'Content-type': 'application/json;charset=utf-8'
+          } 
+        })
+        .then((response) => response.json())
+        .then(json => setPartners(json))
+        .catch(err => console.log(err))
+      }
    
     return (
         <div style={style.strip_form}>
@@ -36,9 +59,12 @@ const Filter = (props) => {
                     </div>
                     <div className='d-flex flex-row align-items-center w-25'>
                         <label className='m-2' htmlFor='partner'>Partner</label>
-                        <select className='form-control p-1' id='partner'>
-                            <option value={'0'}>-- Select --</option>
-
+                        <select className='form-control p-1' id='partner' name='partner' value={props.data.partner} onChange={props.change}>
+                            <option value={'0'} selected>-- Select --</option>
+                            {partners && partners.length>0 && partners.map(
+                                (item)=>
+                                <option value={item.name}>{item.name}</option>
+                                )}
                         </select>
                     </div>
                     

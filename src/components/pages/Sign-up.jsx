@@ -88,7 +88,7 @@ export default function SignUp(props)  {
           </div>
           <div className='d-flex flex-md-row justify-content-evenly m-2'> 
           <label className='d-flex flex-column align-items-end w-25' htmlFor="retype">Retype Password: </label>
-          <input className='d-flex flex-column form-control w-50' type="password" name="retype" id="retype" value={data.repassword} onChange={change} />
+          <input className='d-flex flex-column form-control w-50' type="password" name="retype" id="retype" value={data.retype} onChange={change} />
           </div>
       </fieldset>
       <div className='d-flex flex-row justify-content-around'>

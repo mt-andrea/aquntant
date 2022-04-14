@@ -13,7 +13,8 @@ const Transactions = () => {
   
   const [data, setData] = useState({
     in_out: "0",
-    month: "0"
+    month: "0",
+    partner: "0"
 })
 
 function change(e) {
@@ -37,13 +38,12 @@ function change(e) {
 
   useEffect(() => {
     readIn();
-    console.log(information)
   }, []);
 
   useEffect(() => { //I don't know why, but this one solved the "no button" problem
     
     filtering() 
-  },[data.in_out, data.month])
+  },[data.in_out, data.month, data.partner])
 
   function filtering() {
     //e.preventDefault()
@@ -55,7 +55,8 @@ function change(e) {
       },
       body: JSON.stringify({
         "in_out": data.in_out,
-        "month": data.month
+        "month": data.month,
+        "partner": data.partner
       })
       
     })
@@ -64,15 +65,11 @@ function change(e) {
     .catch(err => console.log(err))
   }
 
-  function doubletrouble(e) {
-    change(e)
-    filtering(e)
-    
-  }
+  
 
   return (
     <div className='d-flex flex-column align-items-center' style={style.content}>
-      <Filter change={change} filtering={filtering} data={data} doubletrouble={doubletrouble}/>
+      <Filter change={change} filtering={filtering} data={data} />
       <table className='table table-striped table-hover m-2 w-75'>
       <thead>
         <tr>
