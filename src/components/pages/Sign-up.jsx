@@ -6,7 +6,7 @@ import Message from '../sub/Message';
 
 
 
-export default function SignUp(props)  {
+export default function SignUp()  {
   
 
   let navigate = useNavigate();

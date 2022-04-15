@@ -4,7 +4,27 @@ import Message from '../sub/Message';
 
 const New = () => {
   const url = 'http://localhost:4000/choices/tax'
+  const url2 = 'http://localhost:4000/choices/partner'
+  const url3 = 'http://localhost:4000/add/transaction'
   const [tax, settax] = useState({})
+  const [message, setMessage] = useState("")
+  const token = 'Bearer: ' + sessionStorage.token
+  const [data, setData] = useState({
+    date: "",
+    taxid: "",
+    amount: "",
+    partnerid: "",
+    comment:""
+})
+
+function change(e) {
+  const { name, value } = e.target
+  setData({
+      ...data,
+      [name]: value
+  })
+}
+  const [partners, setPartners] = useState({})
   useEffect(() => {
     tax_list();
   }, []);
@@ -20,17 +40,22 @@ const New = () => {
       .then(json => settax(json))
       .catch(err => console.log(err))
   }
-  const token = 'Bearer: ' + sessionStorage.token
-  const url3 = 'http://localhost:4000/choices/partner'
 
-  const [partners, setPartners] = useState({})
-
+  function cleardata() {
+    setData({
+      date: "",
+      taxid: "",
+      amount: "",
+      partnerid: "",
+      comment:""
+    })
+  }
   useEffect(() => {
     partners_list();
   }, []);
 
   function partners_list() {
-    fetch(url3, {
+    fetch(url2, {
       method: 'POST',
       headers: {
         'Authorization': token,
@@ -41,48 +66,74 @@ const New = () => {
       .then(json => setPartners(json))
       .catch(err => console.log(err))
   }
+
+  function addTransaction(e) {
+    e.preventDefault()
+    if(data.date=="" || data.taxid=="" || data.amount=="" || data.partnerid=="" || data.comment=="") {
+      setMessage("Please fill every input field!")
+      return
+    }
+    fetch(url3, {
+          method: 'POST',
+          headers: {
+            'Authorization': token,
+              'Content-type': 'application/json;charset=utf-8'
+          },
+          body: JSON.stringify({
+              "date": data.date,
+              "taxid": data.taxid,
+              "amount": data.amount,
+              "partnerid": data.partnerid,
+              "comment": data.comment
+          })
+      })
+          .then((response) => response.json())
+          .then(setMessage("Transaction added"))
+          .catch(err => console.log(err))
+  }
+  
   return (
     <div style={style.content}>
       <form>
         <fieldset style={{ width: '75vw'}}>
           <legend className='text-center'>Transaction data</legend>
-          {<Message style={style.message} />}
+          {<Message style={style.message} message={message} />}
           <div className='d-flex flex-row justify-content-evenly m-2'>
             <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor='date'>Date: </label>
-            <input className='form-control p-1' id='date' name='date' type={'date'} />
+            <input className='form-control p-1' id='date' name='date' type={'date'} onChange={change} />
             </div>
           <div className='d-flex flex-row justify-content-evenly m-2'>
             <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor='tax'>Tax: </label>
-            <select id='tax' name='tax' className='form-control p-1'>
-              <option selected disabled>-- Select --</option>
+            <select id='tax' name='taxid' className='form-control p-1' value={data.taxid} onChange={change}>
+              <option selected >-- Select --</option>
               {tax && tax.length > 0 && tax.map(
                 (item) =>
-                  <option value={item.percent}>{item.name} - {item.percent}%</option>
+                  <option value={item.id}>{item.name} - {item.percent}%</option>
               )}
             </select>
             </div>
           <div className='d-flex flex-row justify-content-evenly m-2'>
             <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor='amount'>Amount: </label>
-            <input className='form-control p-1' id='amount' name='amount' type={'number'} />
+            <input className='form-control p-1' id='amount' name='amount' type={'number'} onChange={change} />
             </div>
           <div className='d-flex flex-row justify-content-evenly m-2'>
             <label  className='d-flex flex-column align-items-end w-50 p-2' htmlFor='partner'>Partner: </label>
-            <select className='form-control p-1' id='partner' name='partner'>
-              <option selected disabled>-- Select --</option>
+            <select className='form-control p-1' id='partner' name='partnerid' value={data.partnerid} onChange={change} >
+              <option selected >-- Select --</option>
               {partners && partners.length > 0 && partners.map(
                 (item) =>
-                  <option value={item.name}>{item.name}</option>
+                  <option value={item.id}>{item.name}</option>
               )}
             </select>
             </div>
           <div className='d-flex flex-row justify-content-evenly m-2'>
             <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor='comment'>Comment: </label>
-            <textarea className='form-control p-1'  id='comment' name='comment'/>
+            <textarea className='form-control p-1'  id='comment' name='comment' onChange={change} />
             </div>
         </fieldset>
         <div className='d-flex flex-row justify-content-around m-auto w-50'>
-      <button className='form-control btn m-3 w-25' style={style.btnPrim} type="submit">Save</button> 
-      <button className='form-control btn m-3 w-25' style={style.btnSec} type="reset">Reset</button>
+      <button className='form-control btn m-3 w-25' style={style.btnPrim} type="submit" onClick={addTransaction}>Save</button> 
+      <button className='form-control btn m-3 w-25' style={style.btnSec} type="reset" onClick={cleardata}>Reset</button>
       </div>
       </form>
     </div>
