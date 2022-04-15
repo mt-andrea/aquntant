@@ -24,7 +24,16 @@ const UserSettings = (props) => {
         [name]: value
     })
 }
-
+  function cleardata() {
+    setData({
+      oldpassword:"",
+      newpassword:"",
+      retype:"",
+      oldemail:"",
+      newemail:"",
+      password:""
+    })
+  }
     function save1(e) {
       e.preventDefault()
       
@@ -101,7 +110,7 @@ function logout() {
     </fieldset>
     <div className='d-flex flex-row justify-content-around m-auto w-50'>
       <button className='form-control btn m-3 w-25' style={style.btnPrim} onClick={save1} type="submit">Save</button> 
-      <button className='form-control btn m-3 w-25' style={style.btnSec} type="reset">Reset</button>
+      <button className='form-control btn m-3 w-25' style={style.btnSec} type="reset" onClick={cleardata}>Reset</button>
       </div>
     </form>
     <form>
@@ -122,7 +131,7 @@ function logout() {
           </fieldset>
           <div className='d-flex flex-row justify-content-around m-auto w-50'>
       <button className='form-control btn m-3 w-25' style={style.btnPrim} onClick={save2} type="submit">Save</button> 
-      <button className='form-control btn m-3 w-25' style={style.btnSec} type="reset">Reset</button>
+      <button className='form-control btn m-3 w-25' style={style.btnSec} type="reset" onClick={cleardata}>Reset</button>
       </div>
     </form>
     <button className='form-control btn btn-outline-danger' style={{fontWeight:'bolder'}} onClick={logout}>Log out</button>

@@ -243,9 +243,22 @@ app.post("/add/partner", authenticateToken,(req,res) => {
 
 })
 
+app.post("/add/transaction", authenticateToken, (req,res) => {
+    const {date,taxid,amount,partnerid,comment} =req.body
+    const q ="INSERT INTO movement (date,taxid,amount,partnerid,comment) VALUES (?);"
+    const ph =[date, taxid, amount, partnerid, comment]
+    pool.query(q,[ph], (error, result) => {
+        if(!error) {
+            res.send(result)
+        } else {
+            res.send(error)
+        }
+    })
+})
+
 app.post("/choices/partner", authenticateToken,(req,res)=> {
     const userid =req.user.id
-    const q ="SELECT name,email,concat(country,' ',postal_code,' ',address) as address FROM partner WHERE userid=?;"
+    const q ="SELECT id,name,email,concat(country,' ',postal_code,' ',address) as address FROM partner WHERE userid=?;"
     pool.query(q, [userid], (error, result) => {
         if(!error) {
             res.send(result)
@@ -255,7 +268,7 @@ app.post("/choices/partner", authenticateToken,(req,res)=> {
     })
 })
 app.post("/choices/tax",(req,res)=> {
-    const q ="SELECT name,percent FROM tax;"
+    const q ="SELECT id,name,percent FROM tax;"
     pool.query(q, (error, result) => {
         if(!error) {
             res.send(result)
