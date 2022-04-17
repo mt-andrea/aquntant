@@ -8,7 +8,7 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const saltRounds = 10; //nem bántani!!!
+const saltRounds = 10; 
 app.use(cors());
 
 
@@ -114,20 +114,7 @@ app.patch("/change/email", authenticateToken, (req, res) => {
 
 
 //listing routes
-app.get("/listing", authenticateToken, (req, res)=> {
-    const q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
-        "partner.name AS name, partner.address, user.username ,movement.comment FROM movement "+ 
-        "INNER JOIN partner ON partner.id=movement.partnerid "+
-        "INNER JOIN user ON user.id=partner.userid "+
-        "WHERE user.username=?;";        
-    pool.query(q,[req.user.username], (error, results) => {
-        if (!error) {
-            res.send(results);
-        } else {
-            res.send(error);
-        }
-    })
-})
+
 
 
 app.get("/listing", authenticateToken, (req, res)=> {
@@ -198,10 +185,6 @@ app.post("/listing/filtered", authenticateToken,(req,res) => {
         q +="AND MONTH(movement.date)=?"
         ph.push(month)
     }
-    
-    
-   
-    
     pool.query(q, ph, (error, result)=> {
         if(!error) {
             res.send(result)
@@ -209,23 +192,7 @@ app.post("/listing/filtered", authenticateToken,(req,res) => {
             res.send(error)
         }
     })
-
-     
 })
-
-app.get("/summary", authenticateToken,(req, res) => { //unused
-    const q = "SELECT sum(case when amount < 0 then amount else 0 end) AS pozitiv, "
-        +"sum(case when amount > 0 then amount else 0 end) AS negativ "
-        +"FROM movement;";
-    pool.query(q, (error, results) => {
-        if (!error) {
-            res.send(results);
-        } else {
-            res.send(error);
-        }
-    })
-})
-
 
 //add routes
 app.post("/add/partner", authenticateToken,(req,res) => {
