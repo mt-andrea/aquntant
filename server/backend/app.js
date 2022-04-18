@@ -247,8 +247,8 @@ app.post("/choices/tax",(req,res)=> {
 })
 
 app.get("/summary", authenticateToken,(req, res) => { //unused
-    const q = "SELECT sum(amount when amount < 0 then amount else 0 end) AS pozitiv, "
-        +"sum(amount when amount > 0 then amount else 0 end) AS negativ "
+    const q = "SELECT sum(case when amount < 0 then amount else 0 end) AS pozitiv, "
+        +"sum(case when amount > 0 then amount else 0 end) AS negativ "
         +"FROM movement;";
     pool.query(q, (error, results) => {
         if (!error) {
