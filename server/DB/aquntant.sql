@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 12, 2022 at 08:55 PM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 8.1.2
+-- Generation Time: Apr 18, 2022 at 12:07 PM
+-- Server version: 10.4.17-MariaDB
+-- PHP Version: 8.0.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -44,7 +44,15 @@ INSERT INTO `movement` (`id`, `date`, `taxid`, `amount`, `partnerid`, `comment`)
 (1, '1999-02-03', 1, 20000, 1, 'Likes to test stuff.'),
 (2, '1985-12-13', 2, -20530, 2, 'Likes to fix stuff.'),
 (3, '1995-06-23', 3, -530, 3, 'Likes to unfix stuff.'),
-(4, '2001-03-16', 4, 40400, 4, 'Likes to route stuff.');
+(4, '2001-03-16', 4, 40400, 4, 'Likes to route stuff.'),
+(5, '2022-12-23', 4, 297861, 6, 'News magazine delivery'),
+(6, '2022-12-23', 5, -400313, 9, 'Meat acquisition'),
+(7, '2022-10-16', 6, -730335, 6, 'procurement of goods'),
+(8, '2022-03-14', 2, 717783, 7, 'Sale'),
+(9, '2022-11-14', 7, 225304, 8, 'IDK'),
+(10, '2022-05-08', 1, 932489, 11, 'Chocolate delivery'),
+(11, '2022-05-08', 3, -456566, 10, 'procurement of goods'),
+(12, '2022-04-24', 5, -98732, 14, 'Order');
 
 -- --------------------------------------------------------
 
@@ -70,7 +78,17 @@ INSERT INTO `partner` (`id`, `name`, `email`, `country`, `postal_code`, `address
 (1, 'Tester  Toby', 'test@email.com', 'testnation1', '420', 'Test city,test str. 21', 1),
 (2, 'Bugfix Brigitte', 'bugfix@email.com', 'Fixination', '2233', 'Fixer\'s city,Fixin str. 21', 2),
 (3, 'Typo Thomas', 'tpyo@email.com', 'Typonation', '2737', 'Typyoers\'s city,topy str. 12', 3),
-(4, 'Router Richard', 'route@email.com', 'Routernation', '3437', 'Routers\'s city,Router str. 12', 4);
+(4, 'Router Richard', 'route@email.com', 'Routernation', '3437', 'Routers\'s city,Router str. 12', 4),
+(5, 'Macy\'s', 'info@macys.com', 'US, Florida', '33166', 'Miami Springs, 2549 Arbutus Drive', 1),
+(6, 'Citigroup', 'info@citigroup.com', 'US, Virginia', '22304', 'Alexandria, 2983 Perine Street', 1),
+(7, 'JetBlue Airways', 'info@jetblue-airways', 'US, Georgia', '30097', 'Duluth, 168 Junior Avenue', 1),
+(8, 'Caterpillar', 'info@caterpillar.com', 'US, Washington DC', '30097', 'Washington, 3912 Hickory Lane', 1),
+(9, 'Hormel Foods', 'info@hormel-foods.co', 'US, Texas', '77036', 'Houston, 1706 Mulberry Street', 1),
+(10, 'Cintas', 'info@cintas.com', 'Hungary', '8564', 'Ugod, Kárpát u. 27.', 3),
+(11, 'Mondelez Internation', 'info@mondelez.com', 'Hungary', '9371', 'Vitnyéd, Wesselényi u. 68.', 3),
+(12, 'Newell Brands', 'info@newell-brands.c', 'Hungary', '9736', 'Csepreg, Belgrád rkp. 12.', 3),
+(13, 'Dominion Energy', 'info@dominion.com', 'Hungary', '2194', 'Tura, Síp utca 48.', 3),
+(14, 'Realogy Holdings', 'info@realogy.com', 'Hungary', '2760', 'Nagykáta, Munkácsy Mihály út 28.', 3);
 
 -- --------------------------------------------------------
 
@@ -89,14 +107,14 @@ CREATE TABLE `tax` (
 --
 
 INSERT INTO `tax` (`id`, `name`, `percent`) VALUES
-(1,'altalanos',27),
-(2,'tej-/gabonatermek',18),
-(3,'gyogyszer/gyogyaszati segedeszkoz',5),
-(4,'konyv/ujsag',5),
-(5,'haziasitott allat es husa',5),
-(6,'tojas/hal',5),
-(7,'targyi adomentes',0),
-(8,'alanyi adomentes',0);
+(1, 'altalanos', 27),
+(2, 'tej-/gabonatermek', 18),
+(3, 'gyogyszer/gyogyaszat', 5),
+(4, 'konyv/ujsag', 5),
+(5, 'haziasitott allat es', 5),
+(6, 'tojas/hal', 5),
+(7, 'targyi adomentes', 0),
+(8, 'alanyi adomentes', 0);
 
 -- --------------------------------------------------------
 
@@ -167,19 +185,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `movement`
 --
 ALTER TABLE `movement`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `partner`
 --
 ALTER TABLE `partner`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `tax`
 --
 ALTER TABLE `tax`
-  MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `user`
