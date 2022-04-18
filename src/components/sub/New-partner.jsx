@@ -69,7 +69,7 @@ function change(e) {
             <input className='form-control form-control-sm' id='postal_code' name='postal_code' type={'text'} value={data.postal_code} onChange={change}/>
           </div>
           <div className='col-lg-3'>
-            <label htmlFor='address'>Street and house number </label>
+            <label htmlFor='address'>City, street and house number </label>
             <input className='form-control form-control-sm' id='address' name='address' type={'text'} value={data.address} onChange={change}/>
           </div>
           <div className='col-lg-1 text-lg-end text-sm-center'>

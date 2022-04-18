@@ -17,7 +17,8 @@ const style = {
     },
     message: {
         color: colors.piros,
-        fontWeight: "bolder"
+        fontWeight: "bolder",
+        textAlign:'center'
     },
     strip_form:{
         border: 'solid 1px ' + colors.sotetkek,

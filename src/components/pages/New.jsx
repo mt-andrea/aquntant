@@ -16,6 +16,7 @@ const New = () => {
     partnerid: "",
     comment:""
 })
+const [recent, setRecent] = useState([])
 
 function change(e) {
   const { name, value } = e.target
@@ -89,15 +90,18 @@ function change(e) {
       })
           .then((response) => response.json())
           .then(setMessage("Transaction added"))
+          .then(cleardata())
+          .then(setRecent([...recent,data]))
           .catch(err => console.log(err))
   }
   
   return (
     <div style={style.content}>
+    <div className='container' >
       <form>
         <fieldset style={{ width: '75vw'}}>
           <legend className='text-center'>Transaction data</legend>
-          {<Message style={style.message} message={message} />}
+          {<Message message={message} />}
           <div className='d-flex flex-row justify-content-evenly m-2'>
             <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor='date'>Date: </label>
             <input className='form-control p-1' id='date' name='date' type={'date'} onChange={change} />
@@ -136,7 +140,29 @@ function change(e) {
       <button className='form-control btn m-3 w-25' style={style.btnSec} type="reset" onClick={cleardata}>Reset</button>
       </div>
       </form>
-    </div>
+<p>Recently added:</p>
+<table className='table table-striped table-hover m-2'>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Partner</th>
+          <th>Tax</th>
+          <th>Comment</th>
+        </tr>
+      </thead>
+      <tbody>
+      {recent && recent.length>0 && recent.map(
+        (item)=>
+        <tr>
+        <td>{item.date}</td>
+        <td>{item.amount}</td>
+        <td>{item.name}</td>
+        <td>{item.tax}</td>
+        <td>{item.comment}</td>
+        </tr>)}</tbody>
+        </table>
+    </div></div>
   )
 }
 
