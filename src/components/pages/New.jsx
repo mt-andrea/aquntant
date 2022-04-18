@@ -57,7 +57,7 @@ function change(e) {
 
   function partners_list() {
     fetch(url2, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Authorization': token,
         'Content-type': 'application/json;charset=utf-8'
