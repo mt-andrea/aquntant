@@ -246,11 +246,14 @@ app.post("/choices/tax",(req,res)=> {
     })
 })
 
-app.get("/summary", authenticateToken,(req, res) => { //unused
-    const q = "SELECT sum(case when amount < 0 then amount else 0 end) AS pozitiv, "
-        +"sum(case when amount > 0 then amount else 0 end) AS negativ "
-        +"FROM movement;";
-    pool.query(q, (error, results) => {
+app.post("/summary", authenticateToken,(req, res) => { //unused
+    const userid = req.user.id
+    const q = "SELECT sum(case when movement.amount < 0 then movement.amount else 0 end) AS negativ, "+
+        "sum(case when movement.amount > 0 then movement.amount else 0 end) AS pozitiv FROM movement "+
+        "INNER JOIN partner ON partner.id=movement.partnerid "+
+        "INNER JOIN user ON user.id=partner.userid "+
+        "WHERE user.id=?;";
+    pool.query(q,[userid], (error, results) => {
         if (!error) {
             res.send(results);
         } else {

@@ -7,6 +7,7 @@ const Transactions = () => {
   const [information, setInformation] = useState({})
   const url ='http://localhost:4000/listing'
   const url2 ='http://localhost:4000/listing/filtered'
+  const url3 ='http://localhost:4000/summary'
   const token = 'Bearer: '+sessionStorage.token
 
 
@@ -15,6 +16,11 @@ const Transactions = () => {
     in_out: "0",
     month: "0",
     partner: "0"
+})
+
+const [sum, setSum] = useState({
+  negativ:"0",
+  pozitiv:"0"
 })
 
 function change(e) {
@@ -38,6 +44,7 @@ function change(e) {
 
   useEffect(() => {
     readIn();
+    summary();
   }, []);
 
   useEffect(() => { //I don't know why, but this one solved the "no button" problem
@@ -65,12 +72,24 @@ function change(e) {
     .catch(err => console.log(err))
   }
 
+  function summary() {
+    fetch(url3, {
+      method: 'POST',
+      headers: {
+        'Authorization': token
+      }
+      
+    })
+    .then((response) => response.json())
+    .then((json) => setSum(json))
+    .catch(err => console.log(err))
+  }
   
 
   return (
     <div  style={style.content}>
     <div className='container' >
-      <Filter change={change} filtering={filtering} data={data} />
+      <Filter change={change} filtering={filtering} data={data} />      
       <table className='table table-striped table-hover m-2'>
       <thead>
         <tr>
