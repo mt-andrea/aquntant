@@ -123,7 +123,7 @@ app.get("/listing", authenticateToken, (req, res)=> {
         "INNER JOIN partner ON partner.id=movement.partnerid "+
         "INNER JOIN user ON user.id=partner.userid "+
         "INNER JOIN tax ON tax.id=movement.taxid "+
-        "WHERE user.username=? ORDER BY movement.id DESC;";        
+        "WHERE user.username=? ORDER BY movement.date DESC;";        
     pool.query(q,[req.user.username], (error, results) => {
         if (!error) {
             res.send(results);
@@ -142,7 +142,8 @@ app.post("/listing/filtered", authenticateToken,(req,res) => {
     "INNER JOIN partner ON partner.id=movement.partnerid "+
     "INNER JOIN user ON user.id=partner.userid "+
     "INNER JOIN tax ON tax.id=movement.taxid "+
-    "WHERE user.username=? ";
+    "WHERE user.username=? "+
+    "order by movement.date";
     if(in_out =="-" && month!="0" && partner!="0") {
         q +="AND movement.amount<0 AND MONTH(movement.date)=? AND partner.name=? "
         ph.push(month,partner)

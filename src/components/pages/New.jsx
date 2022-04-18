@@ -4,7 +4,7 @@ import Message from '../sub/Message';
 
 const New = () => {
   const url = 'http://localhost:4000/choices/tax'
-  const url2 = 'http://localhost:4000/listing'
+  const url2 = 'http://localhost:4000/choices/partner'
   const url3 = 'http://localhost:4000/add/transaction'
   const [tax, settax] = useState({})
   const [message, setMessage] = useState("")
@@ -64,7 +64,7 @@ function change(e) {
       }
     })
       .then((response) => response.json())
-      .then(json => setRecent(json))
+      .then(json => setPartners(json))
       .catch(err => console.log(err))
   }
 

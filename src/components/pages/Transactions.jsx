@@ -89,7 +89,12 @@ function change(e) {
   return (
     <div  style={style.content}>
     <div className='container' >
-      <Filter change={change} filtering={filtering} data={data} />      
+      <Filter change={change} filtering={filtering} data={data} />
+      <div className='row'>
+      <div className='col'><p>Income: {sum.pozitiv}</p></div>
+      <div className='col'><p>Balance: {sum.negativ+sum.pozitiv}</p></div>
+      <div className='col'><p>Outcome: {sum.negativ}</p></div>
+      </div>
       <table className='table table-striped table-hover m-2'>
       <thead>
         <tr>
