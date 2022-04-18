@@ -26,9 +26,10 @@ const Partners = () => {
         .catch(err => console.log(err))
       }
   return (
-    <div className='d-flex flex-md-row flex-lg-column align-items-center' style={style.content}>
+    <div  style={style.content}>
+    <div className='container'>
       <NewPartner updateList={partners_list} />
-      <table className='table table-striped table-hover m-2 w-75'>
+      <table className='table table-striped table-hover m-2'>
         <thead>
           <tr>
             <th>Name</th>
@@ -47,7 +48,7 @@ const Partners = () => {
             )}
         </tbody>
       </table>
-    </div>
+    </div></div>
   )
 }
 

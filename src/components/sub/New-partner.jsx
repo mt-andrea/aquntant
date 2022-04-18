@@ -47,32 +47,34 @@ function change(e) {
       .catch(err => console.log(err))
   }
   return (
-    <div className='w-75 p-2' style={style.strip_form}>
+    <div className=' p-1' style={style.strip_form}>
       <form>
-        <fieldset className='d-flex flex-lg-row flex-md-column justify-content-between'>
+        <fieldset className='row m-2'>
         <h3>Partner data: </h3>
         {<Message style={style.message} message={message}/>}
-        <div className='d-flex flex-column'>
+        <div className='col-lg-2'>
             <label htmlFor='name'>Name </label>
             <input className='form-control form-control-sm' id='name' name='name' type={'text'} value={data.name} onChange={change}/>
           </div>
-          <div className='d-flex flex-column'>
+          <div className='col-lg-2'>
             <label htmlFor='email'>E-mail </label>
             <input className='form-control form-control-sm' id='email' name='email' type={'email'} value={data.email} onChange={change}/>
           </div>
-          <div className='d-flex flex-column'>
+          <div className='col-lg-2'>
             <label htmlFor='country'>Country </label>
             <input className='form-control form-control-sm' id='country' name='country' type={'text'} value={data.country} onChange={change}/>
           </div>
-          <div className='d-flex flex-column'>
+          <div className='col-lg-2'>
             <label htmlFor='postal_code'>Postal code </label>
             <input className='form-control form-control-sm' id='postal_code' name='postal_code' type={'text'} value={data.postal_code} onChange={change}/>
           </div>
-          <div className='d-flex flex-column'>
+          <div className='col-lg-3'>
             <label htmlFor='address'>Street and house number </label>
             <input className='form-control form-control-sm' id='address' name='address' type={'text'} value={data.address} onChange={change}/>
           </div>
+          <div className='col-lg-1 text-lg-end text-sm-center'>
           <button style={style.btnPlus} onClick={hozzaad} type="submit">+</button>
+          </div>
         </fieldset>
       </form>
     </div>
