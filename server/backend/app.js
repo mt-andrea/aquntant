@@ -123,7 +123,7 @@ app.get("/listing", authenticateToken, (req, res)=> {
         "INNER JOIN partner ON partner.id=movement.partnerid "+
         "INNER JOIN user ON user.id=partner.userid "+
         "INNER JOIN tax ON tax.id=movement.taxid "+
-        "WHERE user.username=?;";        
+        "WHERE user.username=? ORDER BY movement.id DESC;";        
     pool.query(q,[req.user.username], (error, results) => {
         if (!error) {
             res.send(results);
@@ -144,47 +144,48 @@ app.post("/listing/filtered", authenticateToken,(req,res) => {
     "INNER JOIN tax ON tax.id=movement.taxid "+
     "WHERE user.username=? ";
     if(in_out =="-" && month!="0" && partner!="0") {
-        q +="AND movement.amount<0 AND MONTH(movement.date)=? AND partner.name=?"
+        q +="AND movement.amount<0 AND MONTH(movement.date)=? AND partner.name=? "
         ph.push(month,partner)
     }
     if(in_out =="-" && month=="0" && partner!="0") {
-        q +="AND movement.amount<0 AND partner.name=?"
+        q +="AND movement.amount<0 AND partner.name=? "
         ph.push(partner)
     }
     if(in_out =="-" && month!="0" && partner=="0") {
-        q +="AND movement.amount<0 AND MONTH(movement.date)=?"
+        q +="AND movement.amount<0 AND MONTH(movement.date)=? "
         ph.push(month)
     }
     if(in_out =="-" && month=="0" && partner=="0") {
-        q +="AND movement.amount<0"
+        q +="AND movement.amount<0 "
     }
     if(in_out =="+" && month!="0" && partner!="0") {
-        q +="AND movement.amount>0 AND MONTH(movement.date)=? AND partner.name=?"
+        q +="AND movement.amount>0 AND MONTH(movement.date)=? AND partner.name=? "
         ph.push(month,partner)
     }
     if(in_out =="+" && month=="0" && partner!="0") {
-        q +="AND movement.amount>0 AND partner.name=?"
+        q +="AND movement.amount>0 AND partner.name=? "
         ph.push(partner)
     }
     if(in_out =="+" && month!="0" && partner=="0") {
-        q +="AND movement.amount>0 AND MONTH(movement.date)=?"
+        q +="AND movement.amount>0 AND MONTH(movement.date)=? "
         ph.push(month,partner)
     }
     if(in_out =="+" && month=="0" && partner=="0") {
-        q +="AND movement.amount>0"
+        q +="AND movement.amount>0 "
     }
     if(in_out =="0" && month!="0" && partner!="0") {
-        q +="AND MONTH(movement.date)=? AND partner.name=?"
+        q +="AND MONTH(movement.date)=? AND partner.name=? "
         ph.push(month,partner)
     }
     if(in_out =="0" && month=="0" && partner!="0") {
-        q +="AND partner.name=?"
+        q +="AND partner.name=? "
         ph.push(partner)
     }
     if(in_out =="0" && month!="0" && partner=="0") {
-        q +="AND MONTH(movement.date)=?"
+        q +="AND MONTH(movement.date)=? "
         ph.push(month)
     }
+    q+="ORDER BY movement.id DESC"
     pool.query(q, ph, (error, result)=> {
         if(!error) {
             res.send(result)
@@ -241,6 +242,19 @@ app.post("/choices/tax",(req,res)=> {
             res.send(result)
         } else {
             res.send(error)
+        }
+    })
+})
+
+app.get("/summary", authenticateToken,(req, res) => { //unused
+    const q = "SELECT sum(movement when amount < 0 then amount else 0 end) AS pozitiv, "
+        +"sum(movement when amount > 0 then amount else 0 end) AS negativ "
+        +"FROM movement;";
+    pool.query(q, (error, results) => {
+        if (!error) {
+            res.send(results);
+        } else {
+            res.send(error);
         }
     })
 })

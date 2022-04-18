@@ -4,7 +4,7 @@ import Message from '../sub/Message';
 
 const New = () => {
   const url = 'http://localhost:4000/choices/tax'
-  const url2 = 'http://localhost:4000/choices/partner'
+  const url2 = 'http://localhost:4000/listing'
   const url3 = 'http://localhost:4000/add/transaction'
   const [tax, settax] = useState({})
   const [message, setMessage] = useState("")
@@ -57,14 +57,14 @@ function change(e) {
 
   function partners_list() {
     fetch(url2, {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Authorization': token,
         'Content-type': 'application/json;charset=utf-8'
       }
     })
       .then((response) => response.json())
-      .then(json => setPartners(json))
+      .then(json => setRecent(json))
       .catch(err => console.log(err))
   }
 
