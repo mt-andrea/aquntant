@@ -51,6 +51,8 @@ function change(e) {
       comment:""
     })
   }
+
+  
   useEffect(() => {
     partners_list();
   }, []);
@@ -104,7 +106,7 @@ function change(e) {
           {<Message message={message} />}
           <div className='d-flex flex-row justify-content-evenly m-2'>
             <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor='date'>Date: </label>
-            <input className='form-control p-1' id='date' name='date' type={'date'} onChange={change} />
+            <input className='form-control p-1' id='date' name='date' type={'date'} onChange={change} value={data.date} />
             </div>
           <div className='d-flex flex-row justify-content-evenly m-2'>
             <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor='tax'>Tax: </label>
@@ -118,7 +120,7 @@ function change(e) {
             </div>
           <div className='d-flex flex-row justify-content-evenly m-2'>
             <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor='amount'>Amount: </label>
-            <input className='form-control p-1' id='amount' name='amount' type={'number'} onChange={change} />
+            <input className='form-control p-1' id='amount' name='amount' type={'number'} onChange={change} value={data.amount} />
             </div>
           <div className='d-flex flex-row justify-content-evenly m-2'>
             <label  className='d-flex flex-column align-items-end w-50 p-2' htmlFor='partner'>Partner: </label>
@@ -132,7 +134,7 @@ function change(e) {
             </div>
           <div className='d-flex flex-row justify-content-evenly m-2'>
             <label className='d-flex flex-column align-items-end w-50 p-2' htmlFor='comment'>Comment: </label>
-            <textarea className='form-control p-1'  id='comment' name='comment' onChange={change} />
+            <textarea className='form-control p-1'  id='comment' name='comment' onChange={change} value={data.comment} />
             </div>
         </fieldset>
         <div className='d-flex flex-row justify-content-around m-auto w-50'>
