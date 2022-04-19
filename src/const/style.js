@@ -4,7 +4,8 @@ import colors from './colors'
 const style = {
     content: {
         background: colors.vilagoskek,
-        minHeight: '100vh'
+        minHeight: '100vh',
+        marginBottom:55
     },
     btnPrim: {
         background: colors.sotetkek,
