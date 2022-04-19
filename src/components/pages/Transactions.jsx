@@ -18,10 +18,11 @@ const Transactions = () => {
     partner: "0"
 })
 
-const [sum, setSum] = useState({
-  negativ:"0",
-  pozitiv:"0"
+const [summa, setSumma] = useState({
+  negativ: 0,
+  pozitiv: 0
 })
+
 
 function change(e) {
   const { name, value } = e.target
@@ -43,8 +44,8 @@ function change(e) {
   }
 
   useEffect(() => {
+    summary()
     readIn();
-    summary();
   }, []);
 
   useEffect(() => { //I don't know why, but this one solved the "no button" problem
@@ -76,12 +77,13 @@ function change(e) {
     fetch(url3, {
       method: 'POST',
       headers: {
-        'Authorization': token
+        'Authorization': token,
+        'Content-type': 'application/json;charset=utf-8'
       }
       
     })
     .then((response) => response.json())
-    .then((json) => setSum(json))
+    .then((json) => setSumma(json))
     .catch(err => console.log(err))
   }
   
@@ -91,9 +93,9 @@ function change(e) {
     <div className='container' >
       <Filter change={change} filtering={filtering} data={data} />
       <div className='row'>
-      <div className='col'><p>Income: {sum.pozitiv}</p></div>
-      <div className='col'><p>Balance: {sum.negativ+sum.pozitiv}</p></div>
-      <div className='col'><p>Outcome: {sum.negativ}</p></div>
+      <div className='col'><p>Income: {summa.length>0 && (summa[0].pozitiv)}</p></div>
+      <div className='col'><p>Balance: {summa.length>0 && (summa[0].negativ+summa[0].pozitiv)}</p></div>
+      <div className='col'><p>Outcome: {summa.length>0 && (summa[0].negativ)}</p></div>
       </div>
       <table className='table table-striped table-hover m-2'>
       <thead>
