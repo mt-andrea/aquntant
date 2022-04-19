@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { style } from '../../const/style';
 import Message from '../sub/Message';
+import $ from 'jquery'
 
 const New = () => {
   const url = 'http://localhost:4000/choices/tax'
@@ -16,7 +17,6 @@ const New = () => {
     partnerid: "",
     comment:""
 })
-const [recent, setRecent] = useState([])
 
 function change(e) {
   const { name, value } = e.target
@@ -93,7 +93,6 @@ function change(e) {
           .then((response) => response.json())
           .then(setMessage("Transaction added"))
           .then(cleardata())
-          .then(setRecent([...recent,data]))
           .catch(err => console.log(err))
   }
   
@@ -142,28 +141,6 @@ function change(e) {
       <button className='form-control btn m-3 w-25' style={style.btnSec} type="reset" onClick={cleardata}>Reset</button>
       </div>
       </form>
-<p>Recently added:</p>
-<table className='table table-striped table-hover m-2'>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Amount</th>
-          <th>Partner</th>
-          <th>Tax</th>
-          <th>Comment</th>
-        </tr>
-      </thead>
-      <tbody>
-      {recent && recent.length>0 && recent.map(
-        (item)=>
-        <tr>
-        <td>{item.date}</td>
-        <td>{item.amount}</td>
-        <td>{item.name}</td>
-        <td>{item.tax}</td>
-        <td>{item.comment}</td>
-        </tr>)}</tbody>
-        </table>
     </div></div>
   )
 }
