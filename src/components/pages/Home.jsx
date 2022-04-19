@@ -15,7 +15,7 @@ const Home = () => {
         <div className='d-flex flex-column'>
           <div className='d-flex flex-row'>
             <div className='w-50 d-flex flex-column m-2'>
-              <img className='w-100' src={afterlogin} />
+              <img className='w-100' src={afterlogin} alt=''/>
             </div>
             <div className='w-50 d-flex flex-column m-2'>
               <h3>Elegant design</h3>
@@ -27,7 +27,7 @@ const Home = () => {
         </div>
         <div className='d-flex flex-row-reverse'>
           <div className='w-50 d-flex flex-column m-2'>
-            <img className='w-100' src={p_new} />
+            <img className='w-100' src={p_new} alt=''/>
           </div>
           <div className='w-50 d-flex flex-column m-2'>
             <h3 className='text-end'>Easy to use</h3>
@@ -40,7 +40,7 @@ const Home = () => {
         </div>
         <div className='d-flex flex-row'>
             <div className='w-50 d-flex flex-column m-2'>
-              <img className='w-100' src={partnerlist} />
+              <img className='w-100' src={partnerlist} alt=''/>
             </div>
             <div className='w-50 d-flex flex-column m-2'>
               <h3>Everything in place</h3>
