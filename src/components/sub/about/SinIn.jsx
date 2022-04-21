@@ -12,7 +12,7 @@ const SinIn = () => {
             <div style={style.content}>
                 <div className='container'>
                     <div className='d-flex flex-column'>
-                        <div className='d-flex flex-row'>
+                        <div className='d-flex flex-lg-row flex-sm-column'>
                             <div className='w-50 d-flex flex-column m-2'>
                                 <img className='w-100' src={step1} alt='' />
                             </div>
@@ -23,7 +23,7 @@ const SinIn = () => {
                                 <p>Note: If you already have an account, you don't have to reregister. Without signing in you're always able to find this button at the same place when you visit the site.</p>
                             </div>
                         </div>
-                        <div className='d-flex flex-row'>
+                        <div className='d-flex flex-lg-row flex-sm-column'>
                             <div className='w-50 d-flex flex-column m-2'>
                                 <img className='w-100' src={step2} alt='' />
                             </div>
@@ -38,7 +38,7 @@ const SinIn = () => {
                                 <p>Step no. 3: Click the "Sign In" button.</p>
                             </div>
                         </div>
-                        <div className='d-flex flex-row'>
+                        <div className='d-flex flex-lg-row flex-sm-column'>
                             <div className='w-50 d-flex flex-column m-2'>
                                 <img className='w-100' src={success} alt='' />
                             </div>

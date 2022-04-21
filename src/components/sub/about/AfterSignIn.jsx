@@ -12,7 +12,7 @@ const AfterSignIn = () => {
     <div style={style.content}>
                 <div className='container'>
                     <div className='d-flex flex-column'>
-                        <div className='d-flex flex-row'>
+                        <div className='d-flex flex-lg-row flex-sm-column'>
                             <div className='w-50 d-flex flex-column m-2'>
                                 <img className='w-100' src={trasactions} alt='' />
                             </div>
@@ -22,7 +22,7 @@ const AfterSignIn = () => {
                                 <p>You can come back to this page anytime with clicking on the "water drop" logo on the top left.</p>
                             </div>
                         </div>
-                        <div className='d-flex flex-row-reverse'>
+                        <div className='d-flex flex-lg-row-reverse flex-sm-column'>
                             <div className='w-50 d-flex flex-column m-2'>
                                 <img className='w-100' src={newTransaction} alt='' />
                             </div>
@@ -30,7 +30,7 @@ const AfterSignIn = () => {
                                 <p>When you click on the "New Transaction" option in the menu on the top, you're gonna see this form where you're able to add a new transacion. You have to give the date, choose the given taxes, type the amount, choose from your partners you already saved. Then describe the entry.</p>
                             </div>
                         </div>
-                        <div className='d-flex flex-row'>
+                        <div className='d-flex flex-lg-row flex-sm-column'>
                             <div className='w-50 d-flex flex-column m-2'>
                                 <img className='w-100' src={partnerlist} alt='' />
                             </div>
@@ -41,7 +41,7 @@ const AfterSignIn = () => {
                                 <p>Note: Before adding a new transaction from a new partner you must save the partner first. So you <b>can't</b> save a transaction linked to a partner that doesn't exist in the database yet.</p>
                             </div>
                         </div>
-                        <div className='d-flex flex-row-reverse'>
+                        <div className='d-flex flex-lg-row-reverse flex-sm-column'>
                             <div className='w-50 d-flex flex-column m-2'>
                                 <img className='w-100' src={settings} alt='' />
                             </div>

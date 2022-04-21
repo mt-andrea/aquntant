@@ -13,7 +13,7 @@ const Home = () => {
         <h2>The money flows, we help to keep track on it.</h2>
       </div>
         <div className='d-flex flex-column'>
-          <div className='d-flex flex-row'>
+          <div className='d-flex flex-lg-row flex-sm-column'>
             <div className='w-50 d-flex flex-column m-2'>
               <img className='w-100' src={afterlogin} alt=''/>
             </div>
@@ -25,7 +25,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div className='d-flex flex-row-reverse'>
+        <div className='d-flex flex-lg-row-reverse flex-sm-column'>
           <div className='w-50 d-flex flex-column m-2'>
             <img className='w-100' src={p_new} alt=''/>
           </div>
@@ -38,7 +38,7 @@ const Home = () => {
             </p>
           </div>
         </div>
-        <div className='d-flex flex-row'>
+        <div className='d-flex flex-lg-row flex-sm-column'>
             <div className='w-50 d-flex flex-column m-2'>
               <img className='w-100' src={partnerlist} alt=''/>
             </div>
