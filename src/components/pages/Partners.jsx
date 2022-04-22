@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {style} from '../../const/style'
 import NewPartner from '../sub/New-partner'
+import { FaTrashAlt } from "react-icons/fa";
 
 const Partners = () => {
   const token = 'Bearer: '+sessionStorage.token
