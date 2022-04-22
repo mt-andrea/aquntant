@@ -7,6 +7,7 @@ const UserSettings = (props) => {
   let navigate = useNavigate();
   const token ="Bearer: "+sessionStorage.token
   const [message, setMessage] = useState("")
+  const deleteUrl = 'http://localhost:4000/user'
 
   const [data, setData] = useState({
       oldpassword: "",
@@ -82,6 +83,21 @@ const UserSettings = (props) => {
         .catch(err => console.log(err))
 }
 
+function delete_user() {
+  fetch(deleteUrl, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': token,
+        'Content-type': 'application/json;charset=utf-8'
+      }
+    })
+    .then((response) => response.json())
+    .then(() => logout())
+    .catch(err => console.log(err))
+  }
+  
+
+
 function logout() {
   sessionStorage.removeItem('token')
   props.beallit({token: ""})
@@ -135,6 +151,7 @@ function logout() {
       </div>
     </form>
     <button className='form-control btn btn-outline-danger' style={{fontWeight:'bolder'}} onClick={logout}>Log out</button>
+    <button className='form-control btn btn-outline-danger' style={{fontWeight:'bolder'}} onClick={() =>delete_user()}>Delete account</button>
     </div>
   )
 }

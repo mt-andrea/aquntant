@@ -118,7 +118,7 @@ app.patch("/change/email", authenticateToken, (req, res) => {
 
 
 app.get("/listing", authenticateToken, (req, res)=> {
-    const q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
+    const q = "SELECT movement.id as id, DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
         "partner.name AS name, partner.address, user.username ,movement.comment,tax.name as tax FROM movement "+ 
         "INNER JOIN partner ON partner.id=movement.partnerid "+
         "INNER JOIN user ON user.id=partner.userid "+
@@ -137,7 +137,7 @@ app.get("/listing", authenticateToken, (req, res)=> {
 app.post("/listing/filtered", authenticateToken,(req,res) => {
     let {in_out,month,partner} = req.body;
     let ph =[req.user.username]
-    let q ="SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
+    let q ="SELECT movement.id as id, DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
     "partner.name AS name, partner.address, user.username ,movement.comment,tax.name as tax FROM movement "+ 
     "INNER JOIN partner ON partner.id=movement.partnerid "+
     "INNER JOIN user ON user.id=partner.userid "+
@@ -262,6 +262,41 @@ app.post("/summary", authenticateToken,(req, res) => { //unused
         }
     })
 })
+
+app.delete("/user", authenticateToken, (req, res) => {
+    const userid = req.user.id
+    const q = "DELETE FROM user WHERE id=?"
+    pool.query(q,userid, (error, result) => {
+        if(!error) {
+            res.send(result)
+        } else {
+            res.send(error)
+        }
+    })
+})
+app.delete("/partner/:id", authenticateToken, (req, res) => {
+    const q = "DELETE FROM partner WHERE id=?"
+    pool.query(q,[req.params.id], (error, result) => {
+        if(!error) {
+            res.send(result)
+        } else {
+            res.send(error)
+        }
+    })
+})
+
+app.delete("/movement/:id", authenticateToken, (req, res) => {
+    const q = "DELETE FROM movement WHERE id=?"
+    pool.query(q,[req.params.id], (error, result) => {
+        if(!error) {
+            res.send(result)
+        } else {
+            res.send(error)
+        }
+    })
+})
+
+
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']

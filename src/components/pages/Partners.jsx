@@ -6,7 +6,7 @@ import { FaTrashAlt } from "react-icons/fa";
 const Partners = () => {
   const token = 'Bearer: '+sessionStorage.token
     const url3 = 'http://localhost:4000/choices/partner'
-
+    const deleteUrl= 'http://localhost:4000/partner/'
     const [partners, setPartners] = useState({})
 
     useEffect(() => {
@@ -26,6 +26,20 @@ const Partners = () => {
         .then(json => setPartners(json))
         .catch(err => console.log(err))
       }
+
+      function delete_partner(id) {
+        fetch(deleteUrl+id, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': token,
+            'Content-type': 'application/json;charset=utf-8'
+          }
+        })
+        .then((response) => response.json())
+        .then(() =>partners_list())
+        .catch(err => console.log(err))
+      }
+
   return (
     <div  style={style.content}>
     <div className='container'>
@@ -45,6 +59,7 @@ const Partners = () => {
             <td>{item.name}</td>
             <td>{item.email}</td>
             <td>{item.address}</td>
+            <td><button onClick={() => delete_partner(item.id)} >Delete</button></td>
             </tr>
             )}
         </tbody>

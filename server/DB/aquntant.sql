@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 19, 2022 at 09:24 PM
+-- Generation Time: Apr 22, 2022 at 07:06 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -79,7 +79,10 @@ INSERT INTO `movement` (`id`, `date`, `taxid`, `amount`, `partnerid`, `comment`)
 (37, '2022-10-15', 6, 298384, 9, 'Sale'),
 (38, '2022-03-20', 7, 412019, 11, 'Sale'),
 (39, '2022-12-29', 6, 738688, 14, 'Sale'),
-(40, '2022-10-07', 7, 65854, 1, 'Sale');
+(40, '2022-10-07', 7, 65854, 1, 'Sale'),
+(41, '2022-04-04', 2, -21345, 1, 'Testing'),
+(42, '2022-05-03', 7, 12345, 7, 'comment'),
+(43, '2022-03-29', 8, -1234, 8, 'comment');
 
 -- --------------------------------------------------------
 
@@ -162,7 +165,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `username`, `email`, `pass`) VALUES
 (1, 'tester1', 'test@email.com', '$2b$10$45TWVXfW4J6bEQR9O9JYluIbK7VkOiq.MD75srZSqs/YAn5lqsdde'),
-(2, 'fixer1', 'bugfix@email.com', '$2b$10$HD7zOpPr9AixFb2NgxwG/eNZpj2KcL02YKspY3aa/XT/RMtYHpUFO'),
+(2, 'fixer1', 'bugfix@email.com', '$2b$10$cBwZ9VaKucHUK.Ok786hFu.hwfgh3NDjaiYDmsgCqSqV5BncNTaVC'),
 (3, 'pyot1', 'tpyo@email.com', '$2b$10$gaDopZOXuhvRlNnZUiIbJOQ/dTUnxZP58DdM10GMtHhrT.O7Q7JT2'),
 (4, 'router2', 'route@email.com', '$2b$10$eLk7gq4RWtV4NtnQAo4cO.BtIL.AkJ5PaojBYkVg4Pu88pJ02yhhq'),
 (5, 'borzsteszt', 'tesztnew@email.com', '$2b$10$tLRNXURXGf3BxDGFOdkcdeyqllecUlTv8u39bSH.NZIKckKm15xay'),
@@ -211,7 +214,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `movement`
 --
 ALTER TABLE `movement`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `partner`
@@ -239,14 +242,14 @@ ALTER TABLE `user`
 -- Constraints for table `movement`
 --
 ALTER TABLE `movement`
-  ADD CONSTRAINT `movement_ibfk_2` FOREIGN KEY (`taxid`) REFERENCES `tax` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `movement_ibfk_3` FOREIGN KEY (`partnerid`) REFERENCES `partner` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `movement_ibfk_2` FOREIGN KEY (`taxid`) REFERENCES `tax` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `movement_ibfk_3` FOREIGN KEY (`partnerid`) REFERENCES `partner` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `partner`
 --
 ALTER TABLE `partner`
-  ADD CONSTRAINT `partner_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `user` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `partner_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
