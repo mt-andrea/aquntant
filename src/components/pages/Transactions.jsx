@@ -8,6 +8,7 @@ const Transactions = () => {
   const url ='http://localhost:4000/listing'
   const url2 ='http://localhost:4000/listing/filtered'
   const url3 ='http://localhost:4000/summary'
+  const deleteUrl ='http://localhost:4000/movement/'
   const token = 'Bearer: '+sessionStorage.token
 
 
@@ -86,6 +87,19 @@ function change(e) {
     .then((json) => setSumma(json))
     .catch(err => console.log(err))
   }
+  function delete_transaction(id) {
+    fetch(deleteUrl+id, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': token,
+        'Content-type': 'application/json;charset=utf-8'
+      }
+    })
+    .then((response) => response.json())
+    .then(() =>filtering())
+    .then(() => summary())
+    .catch(err => console.log(err))
+  }
   
 
   return (
@@ -116,6 +130,7 @@ function change(e) {
         <td>{item.name}</td>
         <td>{item.tax}</td>
         <td>{item.comment}</td>
+        <td><button onClick={()=> delete_transaction(item.id)}> Delete</button></td>
         </tr>)}</tbody>
         </table>
     </div></div>

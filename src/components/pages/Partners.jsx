@@ -36,7 +36,7 @@ const Partners = () => {
           }
         })
         .then((response) => response.json())
-        
+        .then(() =>partners_list())
         .catch(err => console.log(err))
       }
 
@@ -59,7 +59,7 @@ const Partners = () => {
             <td>{item.name}</td>
             <td>{item.email}</td>
             <td>{item.address}</td>
-            <td><button onClick={delete_partner(item.id)} >Delet</button></td>
+            <td><button onClick={() => delete_partner(item.id)} >Delete</button></td>
             </tr>
             )}
         </tbody>
