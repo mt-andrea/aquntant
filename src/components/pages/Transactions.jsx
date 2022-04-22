@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {style} from '../../const/style'
 import Filter from '../sub/Filter'
+import { FaTrashAlt } from "react-icons/fa";
 
 const Transactions = () => {
 
@@ -119,6 +120,7 @@ function change(e) {
           <th>Partner</th>
           <th>Tax</th>
           <th>Comment</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -130,7 +132,7 @@ function change(e) {
         <td>{item.name}</td>
         <td>{item.tax}</td>
         <td>{item.comment}</td>
-        <td><button onClick={()=> delete_transaction(item.id)}> Delete</button></td>
+        <td><button className='btn btn-danger' onClick={()=> delete_transaction(item.id)}><FaTrashAlt/> </button></td>
         </tr>)}</tbody>
         </table>
     </div></div>

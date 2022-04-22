@@ -1,7 +1,9 @@
+/* eslint-disable no-restricted-globals */
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
-import {style, useMediaQuery} from '../../const/style'
+import {style} from '../../const/style'
 import Message from '../sub/Message';
+import { FaTrashAlt } from "react-icons/fa";
 
 const UserSettings = (props) => {
   let navigate = useNavigate();
@@ -84,6 +86,7 @@ const UserSettings = (props) => {
 }
 
 function delete_user() {
+ if(confirm("Are you sure that you wanna delet your account?")){
   fetch(deleteUrl, {
       method: 'DELETE',
       headers: {
@@ -94,7 +97,9 @@ function delete_user() {
     .then((response) => response.json())
     .then(() => logout())
     .catch(err => console.log(err))
-  }
+  }else{
+    return
+  }}
   
 
 
@@ -150,9 +155,12 @@ function logout() {
       <button className='form-control btn m-3 w-25' style={style.btnSec} type="reset" onClick={cleardata}>Reset</button>
       </div>
     </form>
-    <button className='form-control btn btn-outline-danger' style={{fontWeight:'bolder'}} onClick={logout}>Log out</button>
-    <button className='form-control btn btn-outline-danger' style={{fontWeight:'bolder'}} onClick={() =>delete_user()}>Delete account</button>
-    </div>
+    <div className='col-3 m-auto'>
+    <div className='row m-3'>
+    <button className='btn btn-outline-danger' style={{fontWeight:'bolder'}} onClick={logout}>Log out</button></div>
+    <div className='row m-3'>
+    <button className='btn btn-danger' style={{fontWeight:'bolder'}} onClick={() =>delete_user()}> {<FaTrashAlt/>} Delete account {<FaTrashAlt/>}</button>
+    </div></div></div>
   )
 }
 

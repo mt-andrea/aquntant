@@ -59,7 +59,7 @@ const Partners = () => {
             <td>{item.name}</td>
             <td>{item.email}</td>
             <td>{item.address}</td>
-            <td><button onClick={() => delete_partner(item.id)} >Delete</button></td>
+            <td><button className='btn btn-danger' onClick={() => delete_partner(item.id)} ><FaTrashAlt/></button></td>
             </tr>
             )}
         </tbody>
