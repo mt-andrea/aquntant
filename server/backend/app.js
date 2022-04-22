@@ -263,6 +263,41 @@ app.post("/summary", authenticateToken,(req, res) => { //unused
     })
 })
 
+app.delete("/user", authenticateToken, (req, res) => {
+    const userid = req.user.id
+    const q = "DELETE FROM user WHERE id=?"
+    pool.query(q,userid, (error, result) => {
+        if(!error) {
+            res.send(result)
+        } else {
+            res.send(error)
+        }
+    })
+})
+app.delete("/partner/:id", authenticateToken, (req, res) => {
+    const q = "DELETE FROM partner WHERE id=?"
+    pool.query(q,[req.params.id], (error, result) => {
+        if(!error) {
+            res.send(result)
+        } else {
+            res.send(error)
+        }
+    })
+})
+
+app.delete("/movement/:id", authenticateToken, (req, res) => {
+    const q = "DELETE FROM movement WHERE id=?"
+    pool.query(q,[req.params.id], (error, result) => {
+        if(!error) {
+            res.send(result)
+        } else {
+            res.send(error)
+        }
+    })
+})
+
+
+
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
