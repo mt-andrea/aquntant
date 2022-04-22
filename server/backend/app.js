@@ -118,7 +118,7 @@ app.patch("/change/email", authenticateToken, (req, res) => {
 
 
 app.get("/listing", authenticateToken, (req, res)=> {
-    const q = "SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
+    const q = "SELECT movement.id as id, DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
         "partner.name AS name, partner.address, user.username ,movement.comment,tax.name as tax FROM movement "+ 
         "INNER JOIN partner ON partner.id=movement.partnerid "+
         "INNER JOIN user ON user.id=partner.userid "+
@@ -137,7 +137,7 @@ app.get("/listing", authenticateToken, (req, res)=> {
 app.post("/listing/filtered", authenticateToken,(req,res) => {
     let {in_out,month,partner} = req.body;
     let ph =[req.user.username]
-    let q ="SELECT DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
+    let q ="SELECT movement.id as id, DATE_FORMAT(movement.date, '%Y-%m-%d') as date, movement.amount, "+
     "partner.name AS name, partner.address, user.username ,movement.comment,tax.name as tax FROM movement "+ 
     "INNER JOIN partner ON partner.id=movement.partnerid "+
     "INNER JOIN user ON user.id=partner.userid "+
